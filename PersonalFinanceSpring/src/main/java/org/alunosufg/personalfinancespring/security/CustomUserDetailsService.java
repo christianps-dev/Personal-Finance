@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 
 @Component
-public class CustomUserDetailsService implements UserDetailsService {
+public class    CustomUserDetailsService implements UserDetailsService {
 
     private final UserAuthRepository userAuthRepository;
 
