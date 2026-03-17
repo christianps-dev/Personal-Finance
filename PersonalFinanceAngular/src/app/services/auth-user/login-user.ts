@@ -1,9 +1,9 @@
-import { UserRequestDTO } from './../../models/user-request';
 import { UserLoginDTO } from './../../models/user-login-dto';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Enviroment } from '../../../enviroment';
 import { Router } from '@angular/router';
+import { UserRequestDTO } from '../../models/user-request';
 
 @Injectable({
   providedIn: 'root',
@@ -20,7 +20,7 @@ export class LoginUser {
       next: (next) => {
         sessionStorage.setItem("email", next.email)
         sessionStorage.setItem("token", next.token)
-        alert(sessionStorage.getItem("token"))
+        sessionStorage.setItem("username", next.username)
         this.router.navigate(["/dashboard"])
       },
       error: (err) => {alert("Login unsuccesfull"+ err)}

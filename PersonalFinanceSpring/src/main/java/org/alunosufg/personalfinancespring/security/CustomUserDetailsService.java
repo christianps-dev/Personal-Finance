@@ -3,6 +3,7 @@ package org.alunosufg.personalfinancespring.security;
 import org.alunosufg.personalfinancespring.entities.UserEntity;
 import org.alunosufg.personalfinancespring.repository.UserAuthRepository;
 import org.jspecify.annotations.NonNull;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

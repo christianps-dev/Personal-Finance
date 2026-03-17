@@ -39,7 +39,7 @@ public class UserAuthController {
             userEntity.setEmail(body.email());
             userAuthRepository.save(userEntity);
             String token = tokenService.generateToken(userEntity);
-            return ResponseEntity.ok(new ResponseDTO(userEntity.getEmail(), token));
+            return ResponseEntity.ok(new ResponseDTO(userEntity.getUsername(),userEntity.getEmail(), token));
         }
         else{
             return ResponseEntity.badRequest().build();
@@ -52,7 +52,7 @@ public class UserAuthController {
         assert user != null;
         if (passwordEncoder.matches(body.password(), user.getPassword())) {
             String token = tokenService.generateToken(user);
-            return ResponseEntity.ok(new ResponseDTO(user.getEmail(), token));
+            return ResponseEntity.ok(new ResponseDTO(user.getUsername(),user.getEmail(), token));
         }
         else{
             return ResponseEntity.badRequest().build();

@@ -1,27 +1,59 @@
-<main class="container-fluid border round rounded-4 col-10 text-center shadow-lg bg-dark my-5 text-light ">
+<div class="container-fluid p-5 round rounded-4">
   <div class="row">
+  <aside class="bg-dark col">
+    <img src="/public/posternotfound.jpg"alt="Profile Image">
+    <nav class="fw-bolder h5 text-light ps-3">
+      <a>Profile</a><br>
+      <a>Dashboard</a><br>
+      <a>Settings</a><br>
+      <a>Logout</a>
+    </nav>
+  </aside>
 
-    <div class="user-nav-bar col-3 shadow-lg">
+  <main class=" bg-dark col-10">
+    <h2 class="fw-bold text-light text-center py-2 ">Welcome back, {{username}}</h2>
+    <section class="container row text-light financial-details my-3 py-3">
+      <div class="col-3">
 
-      <img ngSrc="{{notFoundImage}}" width="40" height="40" alt="Profile Picture"/>
-      <p>Username</p>
+        <div class="row g-3 mt-2"> <div>
+          <div class="card bg-secondary text-light p-3 border-light border-opacity-25">
+            <small class="text-secondary-emphasis">Total Accounts</small>
+            <h5 class="mb-0">R$ 5.000,00</h5>
+            </div>
+          </div>
+        </div>
 
-      <ul>
-        <li>Profile</li>
-        <li>Dashboard</li>
-        <li>Configuration</li>
-        <img src="{{notFoundImage}}" width="40" height="40" alt="logout-icon"/><span><li>Logout</li></span>
-      </ul>
-    </div>
+        <div class="row g-3 mt-2"> <div>
+          <div class="card bg-secondary text-light p-3 border-light border-opacity-25">
+            <small class="text-secondary-emphasis">Total Invested</small>
+            <h5 class="mb-0">R$ 25.000,00</h5>
+            </div>
+          </div>
+        </div>
 
-    <div class="user-main-dashboard col shadow-lg row mb-4">
-      <h2 class="fw-bold opacity-75 mt-2">Welcome back, {{username}}</h2>
-      <div class="col-8 border" >
-          main box
+        <div class="row g-3 mt-2"> <div>
+          <div class="card bg-secondary text-light p-3 border-light border-opacity-25">
+            <small class="text-secondary-emphasis">Month</small>
+            <h5 class="mb-0">R$ 3.000,00</h5>
+            </div>
+          </div>
+        </div>
+
+        <div class="row g-3 my-2"> <div>
+          <div class="card bg-secondary text-light p-3 border-light border-opacity-25">
+            <small class="text-secondary-emphasis">Month Earnings</small>
+            <h5 class="mb-0">R$ 527,70</h5>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="col border" >
-          main box
+
+      <div class="col">
+          <img class="round rounded-5" src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.kandasoft.com%2Fimages%2F2024%2F05%2FChart-7.png&f=1&nofb=1&ipt=3d29e6721b4748df05890427c96b9b25eabd3850366ba29b2e37e6da941447f0" alt="">
       </div>
-    </div>
+
+    </section>
+  </main>
   </div>
-</main>
+</div>
+

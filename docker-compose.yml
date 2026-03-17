@@ -3,23 +3,32 @@ services:
     image: postgres:15-alpine
     container_name: postgres_pf
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
+      POSTGRES_USER: ${SPRING_DATASOURCE_USERNAME}
+      POSTGRES_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
       POSTGRES_DB: db
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+  angular:
+     build: PersonalFinanceAngular
+     container_name: angular_app_pf
+     ports:
+       - "4200:80"
+     depends_on:
+       - spring
 
-  app:
+  spring:
     build: PersonalFinanceSpring
     container_name: spring_app_pf
     ports:
       - "8080:8080"
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/postgres
-      - SPRING_DATASOURCE_USERNAME=user
-      - SPRING_DATASOURCE_PASSWORD=password
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/db
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+      - TOKEN_SECRET_KEY=${TOKEN_SECRET_KEY}
+      - ANGULAR_FRONTEND_URL=${ANGULAR_FRONTEND_URL}
     depends_on:
       - db
 

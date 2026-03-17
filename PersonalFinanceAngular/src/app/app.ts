@@ -3,7 +3,6 @@ import { RouterOutlet } from '@angular/router';
 import {NgbConfig} from '@ng-bootstrap/ng-bootstrap/config'
 import { ReactiveFormsModule } from '@angular/forms';
 
-
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet, ReactiveFormsModule],
