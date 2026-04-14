@@ -1,7 +1,7 @@
-import { UserRequestDTO } from './../../models/user-request';
+import { UserRequestDTO } from '../../models/auth-dto/user-request';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { UserRegisterDTO } from '../../models/user-register';
+import { UserRegisterDTO } from '../../models/auth-dto/user-register';
 import { Router } from '@angular/router';
 import { Enviroment } from '../../../enviroment';
 

@@ -1,8 +1,8 @@
 package org.alunosufg.personalfinancespring.services;
 
-import org.alunosufg.personalfinancespring.dto.LoginAuthDTO;
-import org.alunosufg.personalfinancespring.dto.RegisterRequestDTO;
-import org.alunosufg.personalfinancespring.dto.ResponseDTO;
+import org.alunosufg.personalfinancespring.dto.auth.LoginAuthDTO;
+import org.alunosufg.personalfinancespring.dto.auth.RegisterRequestDTO;
+import org.alunosufg.personalfinancespring.dto.auth.ResponseDTO;
 import org.alunosufg.personalfinancespring.entities.UserEntity;
 import org.alunosufg.personalfinancespring.repository.UserAuthRepository;
 import org.alunosufg.personalfinancespring.security.TokenService;
@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 @Service
@@ -33,27 +35,25 @@ public class UserAuthService {
     }
 
     public UserEntity registerUser(RegisterRequestDTO userReg){
-        System.out.println("Registering user: " + userReg.username());
+
         UserEntity userEntity = new UserEntity();
         userEntity.setPassword(Objects.requireNonNull(passwordEncoder.encode(userReg.password())));
         userEntity.setUsername(userReg.username());
         userEntity.setEmail(userReg.email());
+        userEntity.setCreated(getDay());
         userAuthRepository.save(userEntity);
-        System.out.println("Registered user: " + userReg.username());
+
         return userEntity;
     }
 
     public UserEntity loginUser(LoginAuthDTO userLog) {
 
-        System.out.println("Login user: " + userLog.email());
         UserEntity loggedUser = userAuthRepository.findByEmail(userLog.email()).orElse(null);
-        if (loggedUser != null && passwordEncoder.matches(userLog.password(), loggedUser.getPassword())) {
-            System.out.println("Password Matches");
+
+        if (loggedUser != null && passwordEncoder.matches(userLog.password(), loggedUser.getPassword()))
             return loggedUser;
-        }
 
         return null;
-
     }
 
     public ResponseEntity<ResponseDTO> authUserResponse(UserEntity userLog){
@@ -74,6 +74,11 @@ public class UserAuthService {
 
         return wrongAuthCredentials(responseStr);
 
+    }
+
+    public String getDay(){
+        LocalDateTime localTime = LocalDateTime.now();
+        return localTime.format(DateTimeFormatter.ISO_DATE);
     }
 
 }

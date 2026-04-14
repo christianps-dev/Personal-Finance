@@ -1,4 +1,4 @@
-package org.alunosufg.personalfinancespring.dto;
+package org.alunosufg.personalfinancespring.dto.auth;
 
 public record RegisterRequestDTO (String email, String password, String username) {
 }

@@ -1,0 +1,47 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-dark text-white ">
+          <h5 class="mb-0 opacity-75">New expense</h5>
+        </div>
+
+        <div class="card-body">
+          <form [formGroup]="financeForm" (ngSubmit)="adicionarGasto()">
+            <div class="mb-3">
+              <label class="form-label">Description</label>
+              <input type="text" class="form-control" name="description" formControlName="description" placeholder="Ex: Meal in shopping">
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Value (R$)</label>
+                <input type="number" class="form-control" name="value" formControlName="value">
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Category</label>
+                <select class="form-select" name="category" formControlName="category">
+                  <option value="" disabled selected>Select...</option>
+
+                    @for (cat of categories; track cat){
+                      <option>{{cat}}
+                      </option>
+                    }
+
+                </select>
+              </div>
+            </div>
+            @if (financeForm.get('value')?.value == null || (financeForm.touched && financeForm.get('value')?.value == 0)) {
+                  <small class="text-danger">Value cannot be 0 or have <span class="fw-bold text-dark h5">, </span>, use instead <span class="fw-bold h5 text-dark">.</span></small>
+                }
+
+            <button type="submit" class="btn btn-outline-dark btn-light btn-success w-100 mt-2">
+              <i class="bi bi-plus-circle"></i> Add Transaction
+            </button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
-import { UserLoginDTO } from '../../models/user-login-dto'
+import { UserLoginDTO } from '../../models/auth-dto/user-login-dto'
 import { LoginUser } from '../../services/auth-user/login-user';
 import { RouterLink } from "@angular/router";
 

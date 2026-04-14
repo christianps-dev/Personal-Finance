@@ -3,9 +3,12 @@ package org.alunosufg.personalfinancespring.entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.text.DateFormat;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -33,4 +36,7 @@ public class UserEntity {
     @Column(unique = true)
     @Email(message = "E-mail must be valid")
     private String email;
+
+    @NonNull
+    private String created;
 }

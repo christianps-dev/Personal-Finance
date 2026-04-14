@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { RegisterUser } from '../../services/auth-user/register-user';
-import { UserRegisterDTO} from '../../models/user-register';
+import { UserRegisterDTO} from '../../models/auth-dto/user-register';
 
 @Component({
   selector: 'app-signup-page',
