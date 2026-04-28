@@ -27,8 +27,10 @@ public class UserAuthController {
         if (body == null)
             return userAuthService.wrongAuthCredentials("null");
 
-        if (!userAuthService.existingUserInDatabase(body))
+        if (userAuthService.existingUserInDatabase(body)) {
+            System.out.println("Credentials already used");
             return userAuthService.credentialsAlreadyUsed(body);
+        }
 
         UserEntity newUser = userAuthService.registerUser(body);
         return userAuthService.authUserResponse(newUser);
@@ -52,7 +54,6 @@ public class UserAuthController {
     public String changePassword(@Valid @RequestBody ChangePasswordDTO body) {
         if (body == null)
             return null;
-
 
         return userAuthService.changePassword(body) ? "ok"  : null;
 

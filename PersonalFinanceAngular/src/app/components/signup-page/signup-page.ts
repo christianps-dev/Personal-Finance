@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
-import { RegisterUser } from '../../services/auth-user/register-user';
+import { AuthUser } from '../../services/auth-user/auth-user';
 import { UserRegisterDTO} from '../../models/auth-dto/user-register';
 import { Router } from "@angular/router";
 
@@ -12,7 +12,7 @@ import { Router } from "@angular/router";
 })
 export class SignupPage {
 
-  constructor(private registerUser : RegisterUser, private router : Router) {}
+  constructor(private authUser : AuthUser, private router : Router) {}
 
   registerForm = new FormGroup({
     username: new FormControl('',Validators.required),
@@ -28,7 +28,7 @@ export class SignupPage {
       email: "",
       password: ""
     })
-    return this.registerUser.registerNewUser(userDTO);
+    return this.authUser.registerNewUser(userDTO);
   }
 
   sendLoginpage(){

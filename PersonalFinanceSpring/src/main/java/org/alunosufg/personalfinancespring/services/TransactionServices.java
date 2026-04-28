@@ -5,13 +5,14 @@ import jakarta.validation.constraints.NotNull;
 import org.alunosufg.personalfinancespring.dto.TransactionDTO;
 import org.alunosufg.personalfinancespring.dto.UserGenericDTO;
 import org.alunosufg.personalfinancespring.dto.UserTransactionDTO;
-import org.alunosufg.personalfinancespring.entities.Transaction;
+import org.alunosufg.personalfinancespring.entities.TransactionEntity;
+import org.alunosufg.personalfinancespring.repository.AccountRepository;
 import org.alunosufg.personalfinancespring.repository.TransactionRepository;
 import org.alunosufg.personalfinancespring.repository.UserAuthRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.sql.Date;
+import java.time.Instant;
 import java.util.List;
 
 @Service
@@ -19,22 +20,25 @@ public class TransactionServices {
 
     private final TransactionRepository transactionRepository;
     private final UserAuthRepository userAuthRepository;
+    private final AccountRepository accountRepository;
 
-    public TransactionServices(TransactionRepository transactionRepository, UserAuthRepository userAuthRepository) {
+    public TransactionServices(TransactionRepository transactionRepository, UserAuthRepository userAuthRepository,
+                               AccountRepository accountRepository) {
         this.transactionRepository = transactionRepository;
         this.userAuthRepository = userAuthRepository;
+        this.accountRepository = accountRepository;
     }
 
     public String saveTransaction(@Valid @NotNull UserTransactionDTO transactionDTO){
-        Transaction transaction = new Transaction();
+        TransactionEntity transactionEntity = new TransactionEntity();
 
-        transaction.setValue(transactionDTO.value());
-        transaction.setUserId(userAuthRepository.findIdByEmail(transactionDTO.email()));
-        transaction.setCategory(transactionDTO.category());
-        transaction.setDescription(transactionDTO.description());
-        transaction.setTransactionTime(getTime());
+        transactionEntity.setValue(transactionDTO.value());
+        transactionEntity.setAccount(accountRepository.getAccount(transactionDTO.email()).orElse(null));
+        transactionEntity.setCategory(transactionDTO.category());
+        transactionEntity.setDescription(transactionDTO.description());
+        transactionEntity.setTransactionTime(Date.from(Instant.now()));
 
-        transactionRepository.save(transaction);
+        transactionRepository.save(transactionEntity);
         return "Ok";
     }
 
@@ -45,14 +49,6 @@ public class TransactionServices {
 
     public List<TransactionDTO> getLastQtdTransactions(@Valid @NotNull UserGenericDTO user, @Valid Integer qtd){
         return transactionRepository.getLastQtdByUserId(userAuthRepository.findIdByEmail(user.email()), qtd);
-
-    }
-
-    private String getTime(){
-        LocalDateTime localDateTime = LocalDateTime.now();
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
-
-        return localDateTime.format(dateFormatter);
 
     }
 

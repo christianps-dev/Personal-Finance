@@ -2,24 +2,7 @@
   <div class="row dashboard-container rounded-5 shadow-lg">
 
     <aside class="sidebar col-auto d-flex flex-column p-4">
-      <div class="text-center mb-5 px-5">
-        <img class="rounded-circle border border-3 border-opacity-25 border-light shadow"
-             src="./../../../../..//public/icons/profile_icon.png"
-             alt="Profile" width="80">
-        <h6 class="text-light mt-3 opacity-75">Admin Account</h6>
-      </div>
-
-      <nav class="nav flex-column fw-bold">
-        <a class="nav-link-custom" (click)="profilePage()"><i class="bi bi-person"></i> Profile</a>
-        <a class="nav-link-custom" (click)="backToDashboard()"><i class="bi bi-speedometer2"></i> Dashboard</a>
-        <a class="nav-link-custom active"><i class="bi-list-columns-reverse"></i> Transactions</a>
-        <a class="nav-link-custom"><i class="bi bi-gear"></i> Settings</a>
-
-        <div class="mt-auto">
-          <hr class="text-light opacity-25">
-          <a class="nav-link-custom text-danger" (click)="logoutUser()"><i class="bi bi-box-arrow-right"></i> Logout</a>
-        </div>
-      </nav>
+      <app-aside-component></app-aside-component>
     </aside>
 
     <div class="col-11 col-md-8 col-lg-6 p-4">

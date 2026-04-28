@@ -2,6 +2,7 @@ package org.alunosufg.personalfinancespring.repository;
 
 import jakarta.transaction.Transactional;
 import lombok.NonNull;
+import org.alunosufg.personalfinancespring.entities.AccountEntity;
 import org.alunosufg.personalfinancespring.entities.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -28,4 +29,5 @@ public interface UserAuthRepository extends JpaRepository<UserEntity, Long> {
     @Transactional
     @Query("UPDATE user u SET u.password = :newPassword WHERE u.id = :userId")
     void changeUserPassword(Long userId, String newPassword);
+
 }

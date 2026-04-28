@@ -1,6 +1,6 @@
 
 .btn-add {
-  background: #24352d;
+  background: #95a5a6;
   color: white;
   font-weight: bold;
   border: none;
@@ -10,7 +10,7 @@
 }
 
 .btn-add:hover {
-  background: #18769e;
+  background: #2ecc71;
   transform: translateY(-2px);
 }
 
@@ -55,12 +55,6 @@
   height: 9vh;
 }
 
-.dark-bg{
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 15px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
 .image-sett{
   margin-left: auto;
   margin-right: auto;
@@ -86,4 +80,22 @@
 .form-control:focus, .form-select:focus {
   box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.2);
   background: #fff;
+}
+
+.alert-box {
+  background: rgba(255, 186, 186, 0.2);
+  border-left: 4px solid #ffbaba;
+  padding: 10px;
+  border-radius: 8px;
+  color: #ffbaba;
+  font-size: 0.85rem;
+}
+
+.dark-bg {
+  background: rgba(255, 255, 255, 0.03); 
+  backdrop-filter: blur(10px);
+  border-radius: 24px; 
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
 }

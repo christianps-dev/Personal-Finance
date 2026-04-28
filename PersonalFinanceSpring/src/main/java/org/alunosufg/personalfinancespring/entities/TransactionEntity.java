@@ -4,27 +4,29 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
+import java.util.Date;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @Entity(name = "transaction")
 @Table(name = "transactions")
-public class Transaction {
+public class TransactionEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long transactionId;
 
-    @JoinColumn( name = "user.id", nullable = false)
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "account_id")
+    private AccountEntity account;
 
     @NonNull
     private Integer value;
 
     @NonNull
-    @NotBlank
-    private String transactionTime;
+    private Date transactionTime;
 
     @NonNull
     @NotBlank

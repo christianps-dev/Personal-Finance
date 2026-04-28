@@ -38,5 +38,6 @@ public class UserEntity {
     private String email;
 
     @NonNull
-    private String created;
+    private Date created;
+
 }

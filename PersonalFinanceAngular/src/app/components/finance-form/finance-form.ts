@@ -1,15 +1,14 @@
 import { Finances } from './../../services/finances';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
 import { getLastTransactionDTO } from '../../models/transactions-dto/getTransactionDTO';
 import { UserGenericDTO } from '../../models/user-generic-dto';
-import { GeneralServices } from '../../services/general-service/general-services';
 import { CurrencyPipe } from '@angular/common';
+import { AsideComponent } from "../aside-component/aside-component/aside-component";
 
 @Component({
   selector: 'app-finance-form',
-  imports: [ReactiveFormsModule, CurrencyPipe],
+  imports: [ReactiveFormsModule, CurrencyPipe, AsideComponent],
   templateUrl: './finance-form.html',
   styleUrls: ['./finance-form.css']
 })
@@ -17,9 +16,7 @@ import { CurrencyPipe } from '@angular/common';
 export class FinanceForm implements OnInit{
 
   constructor(private transaction : Finances,
-     private router : Router,
-     private cdr: ChangeDetectorRef,
-     private generalS: GeneralServices
+     private cdr: ChangeDetectorRef
     ){}
 
   categories = ['Food', 'Transport', 'Leisure', 'Health', 'Housing', 'Others'];
@@ -69,13 +66,6 @@ export class FinanceForm implements OnInit{
       this.financeForm.patchValue({ type: type });
     }
 
-   public backToDashboard(){
-    this.router.navigate(['/dashboard'])
-  }
-
-  public profilePage(){
-    this.router.navigate(['profile']);
-  }
 
   public getLastTransactions(qtd: number){
     const user: UserGenericDTO = ({
@@ -91,10 +81,6 @@ export class FinanceForm implements OnInit{
       },
       error: (err) => console.log("Error while getting trasactions", err)
     });
-  }
-
-  public logoutUser(){
-    return this.generalS.logoutUser();
   }
 
 }

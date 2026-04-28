@@ -2,39 +2,28 @@
   <div class="row dashboard-container rounded-5 shadow-lg">
 
     <aside class="sidebar col-auto d-flex flex-column p-4">
-      <div class="text-center mb-5 px-5">
-        <img class="rounded-circle border border-3 border-opacity-25 border-light shadow"
-             src="./../../../../..//public/icons/profile_icon.png"
-             alt="Profile" width="80">
-        <h6 class="text-light mt-3 opacity-75">Admin Account</h6>
-      </div>
-
-      <nav class="nav flex-column fw-bold">
-        <a class="nav-link-custom" (click)="navigateToProfile()"><i class="bi bi-person"></i> Profile</a>
-        <a class="nav-link-custom active"><i class="bi bi-speedometer2"></i> Dashboard</a>
-        <a class="nav-link-custom" (click)="navigateToUpdates()"><i class="bi-list-columns-reverse"></i> Transactions</a>
-        <a class="nav-link-custom"><i class="bi bi-gear"></i> Settings</a>
-
-        <div class="mt-auto">
-          <hr class="text-light opacity-25">
-          <a class="nav-link-custom text-danger" href="#"><i class="bi bi-box-arrow-right"></i> Logout</a>
-        </div>
-      </nav>
+      <app-aside-component></app-aside-component>
     </aside>
 
     <main class="col p-4 text-light">
       <header class="d-flex justify-content-between align-items-center mb-5">
         <h2 class="fw-bold m-0">Welcome back, <span class="text-info">{{username}}</span></h2>
 
-        <div class="col-md-2 mb-4">
-          <label class="form-label">Month...</label>
-          <select class="form-select rounded-4" formControlName="month">
-            <option value="" disabled selected>Select...</option>
+        <div class="col-md-3 col-lg-2 mb-4">
+          <label class="form-label d-flex align-items-center">
+            <i class="bi bi-calendar3 me-2 text-info"></i> Period
+          </label>
+
+          <div class="input-group custom-glass-select">
+            <select class="form-select border-0" formControlName="month">
+              <option value="" disabled selected>Select month...</option>
               @for (month of months; track month){
-                <option [value]="month">{{month}}</option>
+                <option [value]="month" class="bg-dark text-white">{{month}}</option>
               }
-          </select>
+            </select>
+          </div>
         </div>
+
       </header>
 
       <div class="row g-4">

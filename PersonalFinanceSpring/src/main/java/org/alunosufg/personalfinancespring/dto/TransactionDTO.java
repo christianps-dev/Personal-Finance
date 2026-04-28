@@ -1,4 +1,6 @@
 package org.alunosufg.personalfinancespring.dto;
 
-public record TransactionDTO(Integer value, String date, String category)  {
+import java.util.Date;
+
+public record TransactionDTO(Integer value, Date date, String category)  {
 }

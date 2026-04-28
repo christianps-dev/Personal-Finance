@@ -4,7 +4,9 @@ import org.alunosufg.personalfinancespring.dto.auth.ChangePasswordDTO;
 import org.alunosufg.personalfinancespring.dto.auth.LoginAuthDTO;
 import org.alunosufg.personalfinancespring.dto.auth.RegisterRequestDTO;
 import org.alunosufg.personalfinancespring.dto.auth.ResponseDTO;
+import org.alunosufg.personalfinancespring.entities.AccountEntity;
 import org.alunosufg.personalfinancespring.entities.UserEntity;
+import org.alunosufg.personalfinancespring.repository.AccountRepository;
 import org.alunosufg.personalfinancespring.repository.UserAuthRepository;
 import org.alunosufg.personalfinancespring.security.TokenService;
 import org.springframework.http.HttpStatus;
@@ -12,8 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.sql.Date;
+import java.time.Instant;
 import java.util.Objects;
 
 @Service
@@ -22,12 +24,14 @@ public class UserAuthService {
     UserAuthRepository userAuthRepository;
     PasswordEncoder passwordEncoder;
     TokenService tokenService;
+    AccountRepository accountRepository;
 
     public UserAuthService(UserAuthRepository userAuthRepository, PasswordEncoder passwordEncoder,
-                           TokenService tokenService) {
+                           TokenService tokenService, AccountRepository accountRepository) {
         this.userAuthRepository = userAuthRepository;
         this.passwordEncoder = passwordEncoder;
         this.tokenService = tokenService;
+        this.accountRepository = accountRepository;
     }
 
     public boolean existingUserInDatabase(RegisterRequestDTO newUser){
@@ -41,8 +45,11 @@ public class UserAuthService {
         userEntity.setPassword(Objects.requireNonNull(passwordEncoder.encode(userReg.password())));
         userEntity.setUsername(userReg.username());
         userEntity.setEmail(userReg.email());
-        userEntity.setCreated(getDay());
+
+        userEntity.setCreated(Date.from(Instant.now()));
         userAuthRepository.save(userEntity);
+
+        createUserAccount(userEntity);
 
         return userEntity;
     }
@@ -55,6 +62,14 @@ public class UserAuthService {
             return loggedUser;
 
         return null;
+    }
+
+    public void createUserAccount(UserEntity user){
+        AccountEntity account = new AccountEntity();
+        account.setAccountBalance(0);
+        account.setUser(user);
+
+        accountRepository.save(account);
     }
 
     public ResponseEntity<ResponseDTO> authUserResponse(UserEntity userLog){
@@ -77,11 +92,6 @@ public class UserAuthService {
 
     }
 
-    private String getDay(){
-        LocalDateTime localTime = LocalDateTime.now();
-        return localTime.format(DateTimeFormatter.ISO_DATE);
-    }
-
     public boolean changePassword(ChangePasswordDTO body){
         UserEntity user = userAuthRepository.findByEmail(body.email()).orElse(null);
         if (user == null || body.password().equals(body.newPassword()))
@@ -89,9 +99,12 @@ public class UserAuthService {
 
         if (passwordEncoder.matches(body.password(), user.getPassword())){
             userAuthRepository.changeUserPassword(user.getId(), passwordEncoder.encode(body.newPassword()));
+            System.out.println("Password changed successfully");
             return true;
         }
         else{
+            System.out.println("Password change failed");
+
             return false;
         }
     }

@@ -2,77 +2,99 @@
   <div class="row dashboard-container rounded-5 shadow-lg">
 
     <aside class="sidebar col-auto d-flex flex-column p-4">
-      <div class="text-center mb-5 px-5">
-        <img class="rounded-circle border border-3 border-opacity-25 border-light shadow"
-             src="./../../../../..//public/icons/profile_icon.png"
-             alt="Profile" width="80">
-        <h6 class="text-light mt-3 opacity-75">Admin Account</h6>
-      </div>
-
-      <nav class="nav flex-column fw-bold">
-        <a class="nav-link-custom active"><i class="bi bi-person"></i> Profile</a>
-        <a class="nav-link-custom" (click)="navigateToDashboard()"><i class="bi bi-speedometer2"></i> Dashboard</a>
-        <a class="nav-link-custom" (click)="navigateToUpdates()"><i class="bi-list-columns-reverse"></i> Transactions</a>
-        <a class="nav-link-custom"><i class="bi bi-gear"></i> Settings</a>
-
-        <div class="mt-auto">
-          <hr class="text-light opacity-25">
-          <a class="nav-link-custom text-danger" href="#"><i class="bi bi-box-arrow-right"></i> Logout</a>
-        </div>
-      </nav>
+      <app-aside-component></app-aside-component>
     </aside>
 
-    <main class="col p-4 text-light ">
+    <main class="col p-4 text-light">
+      <div class="row g-4 justify-content-center">
 
-      <div class="row col p-4 ">
-
-        <div class="col-6 p-5 dark-bg text-center">
-          <div class="container px-5 mb-5">
-            <img class="image-sett rounded-circle border border-3 border-opacity-25 border-light shadow "
-                src="./../../../../..//public/icons/profile_icon.png"
-                alt="Profile" width="80">
-            <h6 class="fw-bold text-light mt-3 opacity-75">Admin Account</h6>
-          </div>
-
-          <div class="mb-5 px-1 ">
-            <h6 class="fw-bold dark-placeholder text-light opacity-75"><i class="bi bi-person px-1"></i>Username:<span class="ps-2"><h4>{{username}}</h4></span></h6><br>
-            <h6 class="fw-bold dark-placeholder text-light opacity-75"><i class="bi bi-envelope px-1"></i> Email: <span class="ps-2"><h4>{{email}}</h4></span></h6>
-          </div>
-       </div>
-
-        <form [formGroup]="changePasswordForm" (ngSubmit)="changeUserPassword()" class="col-6 p-5 dark-bg text-center">
-          <div class="mb-4">
-
-            <h3 class="fw-bold text-center p-1">Change Password ?</h3>
-
-            <label class="text-start form-label">Password</label>
-            <div class="input-group">
-              <span class="input-group-text bg-white border-0 rounded-start-4"><i class="bi bi-lock text-secondary"></i></span>
-              <input formControlName="password" type="text" class="form-control rounded-end-4" formControlName="description" placeholder="Ex: jhondoe123">
+        <div class="col-12 col-xl-5">
+          <div class="dark-bg p-4 p-md-5 text-center h-100">
+            <div class="mb-4">
+              <div class="position-relative d-inline-block">
+                <img class="rounded-circle border border-3 border-info shadow-lg mb-3"
+                     src="./../../../../..//public/icons/profile_icon.png" width="120">
+              </div>
+              <h3 class="text-light fw-bold mb-0 text-truncate">{{username}}</h3>
+              <p class="text-info opacity-75">System Admin</p>
             </div>
 
-            <label class="form-label mt-4">Password again</label>
-            <div class="input-group">
-              <span class="input-group-text bg-white border-0 rounded-start-4"><i class="bi bi-lock text-secondary"></i></span>
-              <input formControlName="password2" type="text" class="form-control rounded-end-4" formControlName="description" placeholder="Ex: jhondoe123">
-            </div>
+            <div class="text-start">
 
-            <label class="form-label mt-4">New Password</label>
-            <div class="input-group">
-              <span class="input-group-text bg-white border-0 rounded-start-4"><i class="bi bi-lock text-secondary"></i></span>
-              <input formControlName="newPassword"type="text" class="form-control rounded-end-4" formControlName="description" placeholder="Ex: jhondoe123">
-            </div>
+              <div class="dark-placeholder mb-3 ">
+                <small class="text-uppercase opacity-50 fw-bold">Username</small>
+                <div class="d-flex align-items-center mt-1">
+                  <i class="bi bi-person-badge me-2 text-info"></i>
+                  <h5 class="mb-0 text-break">{{username}}</h5>
+                </div>
+              </div>
 
+              <div class="dark-placeholder">
+                <small class="text-uppercase opacity-50 fw-bold">Email</small>
+                <div class="d-flex align-items-center mt-1">
+                  <i class="bi bi-envelope-at me-2 text-info"></i>
+                  <h5 class="mb-0 text-break">{{email}}</h5>
+                </div>
+              </div>
+            </div>
           </div>
+        </div>
 
-          <button [disabled]="" type="submit"
-                  class="w-75 btn btn-lg btn-add text-white fw-bold shadow py-3 transition-all">
-            <i class="bi bi-check-circle me-2"></i> Change Password
-          </button>
+        <div class="col-12 col-xl-6">
 
-        </form>
+          <form [formGroup]="changePasswordForm" (ngSubmit)="changeUserPassword()" class="dark-bg p-4 p-md-5 text-center h-100">
+            <h3 class="fw-bold mb-4">Security Settings</h3>
+            <p class="opacity-75 mb-4">Update your account password</p>
+
+            <div class="mb-3 text-start">
+              <label class="form-label ms-1">Current Password</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-lock text-secondary"></i></span>
+                <input formControlName="password" type="password" class="form-control" placeholder="Current password">
+              </div>
+              @if (changePasswordForm.get("password")?.invalid && changePasswordForm.get("password")?.touched ){
+                <div class="alert-box mt-2">
+                  <i class="bi bi-exclamation-triangle-fill me-2"></i> 8-12 characters required
+                </div>
+              }
+            </div>
+
+            <div class="row text-start">
+              <div class="col-md-6 mb-3">
+                <label class="form-label ms-1">New Password</label>
+                <input formControlName="password2" type="password" class="form-control" placeholder="New password">
+              </div>
+              <div class="col-md-6 mb-3">
+
+                <label class="form-label ms-1">Repeat Password</label>
+                <input formControlName="newPassword" type="password" class="form-control" placeholder="Repeat password">
+              </div>
+              @if (changePasswordForm.get("newPassword")?.invalid && changePasswordForm.get("newPassword")?.touched
+              || changePasswordForm.get("password2")?.invalid && changePasswordForm.get("newPassword")?.touched){
+                <div class="alert-box mt-2 mb-1">
+                  <i class="bi bi-exclamation-triangle-fill me-2"></i> 8-12 characters required
+                </div>
+              }
+            </div>
+
+            @if (changePasswordForm.get("newPassword")?.value != changePasswordForm.get("password2")?.value && changePasswordForm.get("newPassword")?.touched){
+              <div class="alert-box mb-4">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i> Passwords don't match
+              </div>
+
+            }
+            @else{
+              <button [disabled]="changePasswordForm.invalid" type="submit"
+                    class="btn btn-add w-100 mt-4 py-3 shadow-lg">
+                <i class="bi bi-shield-lock me-2"></i> Update Password
+              </button>
+            }
+
+
+          </form>
+        </div>
+
       </div>
-
     </main>
   </div>
 </div>

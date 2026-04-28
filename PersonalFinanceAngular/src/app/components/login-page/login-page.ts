@@ -1,7 +1,7 @@
+import { AuthUser } from './../../services/auth-user/auth-user';
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { UserLoginDTO } from '../../models/auth-dto/user-login-dto'
-import { LoginUser } from '../../services/auth-user/login-user';
 import { RouterLink } from "@angular/router";
 
 @Component({
@@ -17,7 +17,7 @@ export class LoginPage {
       password: new FormControl('', [Validators.required, Validators.minLength(8)])
     })
 
-    constructor(private loginRequest: LoginUser){}
+    constructor(private authUser: AuthUser){}
 
     loginUser(){
       const userLogin = this.LoginForm.value as UserLoginDTO;
@@ -27,7 +27,6 @@ export class LoginPage {
         password: ""
       })
 
-      console.log(userLogin.password, userLogin.email);
-      return this.loginRequest.siginUser(userLogin);
+      return this.authUser.siginUser(userLogin);
     }
 }

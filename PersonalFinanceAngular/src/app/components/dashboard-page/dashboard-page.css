@@ -57,3 +57,34 @@
   align-items: center;
   justify-content: center;
 }
+
+.custom-glass-select {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  overflow: hidden; 
+  transition: all 0.3s ease;
+}
+
+.custom-glass-select:focus-within {
+  border-color: #00d4ff;
+  box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+}
+
+.form-select {
+  background-color: transparent !important;
+  color: white !important;
+  padding: 10px 15px;
+  cursor: pointer;
+  appearance: none;
+}
+
+.form-select {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e") !important;
+}
+
+.form-select option {
+  background-color: #1a1a1a; 
+  color: white;
+}
