@@ -11,6 +11,7 @@ import org.alunosufg.personalfinancespring.repository.TransactionRepository;
 import org.alunosufg.personalfinancespring.repository.UserAuthRepository;
 import org.springframework.stereotype.Service;
 import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -54,11 +55,21 @@ public class TransactionServices {
         return transactionRepository.getAllByUserId(userId);
     }
 
-
-    public List<TransactionDTO> getLastQtdTransactions(@Valid @NotNull String user, @Valid Integer qtd){
+    public List<TransactionDTO> getLastQtdTransactions(@Valid @NotNull String email, @Valid Integer qtd){
         System.out.printf("--- Getting last %d transactions\n", qtd);
-        return transactionRepository.getLastQtdByUserId(userAuthRepository.findIdByEmail(user), qtd);
+        return transactionRepository.getLastQtdByUserId(userAuthRepository.findIdByEmail(email), qtd);
 
     }
+
+    public List<TransactionDTO> getALlTransactionsByMonth(String email, Integer month){
+        System.out.printf("--- Getting all transactions in the month %d \n", month);
+        String monthQuery = "2026-" + month + "-";
+        Date lastDay = java.sql.Date.valueOf(monthQuery + "31");
+        Date firstDay = java.sql.Date.valueOf(monthQuery + "1");
+
+        return transactionRepository.getAllTrasactionsByMonth(firstDay, lastDay,
+                userAuthRepository.findIdByEmail(email));
+    }
+
 
 }

@@ -48,15 +48,29 @@
                 </div>
               </div>
 
-              <div class="col-md-6 mb-4">
-                <label class="form-label">Category</label>
-                <select class="form-select rounded-4" formControlName="category">
-                  <option value="" disabled selected>Select...</option>
-                  @for (cat of categories; track cat){
-                    <option [value]="cat">{{cat}}</option>
-                  }
-                </select>
-              </div>
+              @if (financeForm.get('type')?.value === 'expense') {
+                <div class="col-md-6 mb-4">
+                  <label class="form-label">Category</label>
+                  <select class="form-select rounded-4" formControlName="category">
+                    <option value="" disabled selected>Select...</option>
+                    @for (cat of expensesCategories; track cat){
+                      <option [value]="cat">{{cat}}</option>
+                    }
+                  </select>
+                </div>
+              }
+              @else {
+                <div class="col-md-6 mb-4">
+                  <label class="form-label">Category</label>
+                  <select class="form-select rounded-4" formControlName="category">
+                    <option value="" disabled selected>Select...</option>
+                    @for (cat of incomeCategories; track cat){
+                      <option [value]="cat">{{cat}}</option>
+                    }
+                  </select>
+                </div>
+              }
+
             </div>
 
             @if (financeForm.get('value')?.invalid && financeForm.get('value')?.touched) {

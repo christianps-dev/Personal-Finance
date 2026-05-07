@@ -14,4 +14,5 @@ export class App {
   constructor(NgbConfig: NgbConfig) {
     NgbConfig.animation = false;
   }
+
 }

@@ -1,4 +1,5 @@
 export interface getLastTransactionDTO{
   date: string,
-  value: number;
+  value: number,
+  category: string;
 }

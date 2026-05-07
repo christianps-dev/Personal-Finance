@@ -20,7 +20,7 @@ public class FinanceController {
         this.transactionService = transactionServices;
     }
 
-    @PostMapping("/transactions")
+    @PostMapping("/transaction")
     public ResponseEntity<String> saveNewTransaction(@Valid @RequestBody UserTransactionDTO newTransaction) {
         String result = transactionService.saveTransaction(newTransaction);
         System.out.println("--- Saving new transaction");
@@ -50,4 +50,12 @@ public class FinanceController {
         return ResponseEntity.ok(transactions);
     }
 
+    @GetMapping("/transactions/{month}")
+    public ResponseEntity<List<TransactionDTO>> getTransactionsByMonth(
+            @RequestParam String email,
+            @PathVariable Integer month) {
+        System.out.println("--- Getting all transactions by month");
+        List<TransactionDTO> transactions = transactionService.getALlTransactionsByMonth(email, month);
+        return ResponseEntity.ok(transactions);
+    }
 }

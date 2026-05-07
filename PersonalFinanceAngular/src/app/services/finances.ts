@@ -1,17 +1,15 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Enviroment } from './../../enviroment';
 import { Injectable } from '@angular/core';
 import { getLastTransactionDTO } from '../models/transactions-dto/getTransactionDTO';
 import { UserGenericDTO } from '../models/user-generic-dto';
-import { DashboardFinancesDTO } from '../models/transactions-dto/dashboard-dto';
-import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class Finances {
 
-  transactionURL = Enviroment.apiURL + "user";
+  transactionURL = Enviroment.apiURL + "/finance";
 
   constructor(private http : HttpClient){}
 
@@ -23,10 +21,16 @@ export class Finances {
   }
 
   getLastTransactionsByQtd(qtd: number, user: UserGenericDTO){
-    return this.http.post<getLastTransactionDTO[]>(this.transactionURL + "/transactions/" + qtd, user);
+    const req = {
+      params: new HttpParams().set('email', user.email)
+    };
+    return this.http.get<getLastTransactionDTO[]>(this.transactionURL + "/transactions/last/" + qtd, req);
   }
 
   getAllTransactions(user: UserGenericDTO){
-    return this.http.post<getLastTransactionDTO[]>(this.transactionURL + "/transactions", user )
+    const req = {
+      params: new HttpParams().set('email', user.email)
+    };
+    return this.http.get<getLastTransactionDTO[]>(this.transactionURL + "/transactions", req)
   }
 }

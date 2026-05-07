@@ -12,24 +12,6 @@
   min-width: 240px;
 }
 
-.nav-link-custom {
-  color: rgba(255, 255, 255, 0.7);
-  padding: 12px 20px;
-  border-radius: 12px;
-  margin-bottom: 8px;
-  transition: all 0.3s ease;
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.nav-link-custom:hover, .nav-link-custom.active {
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
-  transform: translateX(5px);
-}
-
 .finance-card {
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -63,7 +45,7 @@
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 12px;
-  overflow: hidden; 
+  overflow: hidden;
   transition: all 0.3s ease;
 }
 
@@ -85,6 +67,45 @@
 }
 
 .form-select option {
-  background-color: #1a1a1a; 
+  background-color: #1a1a1a;
   color: white;
+}
+
+
+
+.chart-controls {
+  /* Container para agrupar os botões como se fossem um switch */
+  background: rgba(255, 255, 255, 0.05);
+  padding: 5px;
+  border-radius: 16px;
+  display: inline-flex;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.type-option {
+  padding: 8px 20px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  color: rgba(255, 255, 255, 0.5);
+  text-decoration: none;
+  user-select: none;
+}
+
+/* Efeito de Hover */
+.type-option:hover {
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Estado Ativo (Onde a mágica acontece) */
+.type-option.active {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transform: scale(1.02);
 }

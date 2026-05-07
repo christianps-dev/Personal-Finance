@@ -19,7 +19,8 @@ export class FinanceForm implements OnInit{
      private cdr: ChangeDetectorRef
     ){}
 
-  categories = ['Food', 'Transport', 'Leisure', 'Health', 'Housing', 'Others'];
+  expensesCategories = ['Food', 'Transport', 'Leisure', 'Health', 'Housing', 'Income', 'Others'];
+  incomeCategories = ['Job', 'Freelance', 'Gift', 'Other']
 
   financeForm = new FormGroup ({
     description: new FormControl(''),
@@ -56,16 +57,15 @@ export class FinanceForm implements OnInit{
             type: 'expense'
     });
 
-    this.getLastTransactions(this.qtdTransactionsMenu);
+    this.transaction.addNewTransaction(financeAdd);
 
-    return this.transaction.addNewTransaction(financeAdd);
+    return this.getLastTransactions(this.qtdTransactionsMenu);
 
   }
 
   public setTransactionType(type: 'income' | 'expense') {
       this.financeForm.patchValue({ type: type });
-    }
-
+  }
 
   public getLastTransactions(qtd: number){
     const user: UserGenericDTO = ({

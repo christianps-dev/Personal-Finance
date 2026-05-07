@@ -12,7 +12,7 @@ import { ChangePasswordDTO } from '../../models/auth-dto/change-password-dto';
 })
 export class AuthUser {
 
-  authUserUrl = Enviroment.apiURL + "auth";
+  authUserUrl = Enviroment.apiURL + "/auth";
 
   constructor(private http: HttpClient, private router: Router) {}
 

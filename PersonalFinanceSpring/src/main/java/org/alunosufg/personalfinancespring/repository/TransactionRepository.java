@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -16,6 +17,9 @@ public interface TransactionRepository extends JpaRepository<TransactionEntity, 
 
     @Query("SELECT t.value AS value, t.transactionTime AS date, t.category AS category FROM transaction t WHERE t.account.user.id =:userId ORDER BY t.transactionTime DESC LIMIT :qtd")
     List<TransactionDTO> getLastQtdByUserId(Long userId, Integer qtd);
+
+    @Query("SELECT t.value AS value, t.transactionTime AS date, t.category AS category FROM transaction t WHERE t.account.user.id =:userId AND t.transactionTime BETWEEN :firstDay AND :lastDay ")
+    List<TransactionDTO> getAllTrasactionsByMonth(Date firstDay, Date lastDay, Long userId);
 
 
 
