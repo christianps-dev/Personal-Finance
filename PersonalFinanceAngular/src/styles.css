@@ -1,8 +1,9 @@
 @import 'tailwindcss';
 
 body{
-    background-image: url("../public/images/background.jpg");
-    background-color: black;
+    background-image: url("../public/images/new-background.jpg");
+    background-size: cover;
+    background-color: #0D1517;
     font-family: 'Poppins', sans-serif;
     background-repeat: no-repeat;
 }

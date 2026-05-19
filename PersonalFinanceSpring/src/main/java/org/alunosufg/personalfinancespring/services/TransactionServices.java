@@ -4,9 +4,9 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.alunosufg.personalfinancespring.dto.transactions.TransactionDTO;
+import org.alunosufg.personalfinancespring.dto.transactions.TransactionFullDTO;
 import org.alunosufg.personalfinancespring.dto.transactions.UserTransactionDTO;
 import org.alunosufg.personalfinancespring.entities.TransactionEntity;
-import org.alunosufg.personalfinancespring.repository.AccountRepository;
 import org.alunosufg.personalfinancespring.repository.TransactionRepository;
 import org.alunosufg.personalfinancespring.repository.UserAuthRepository;
 import org.springframework.stereotype.Service;
@@ -19,26 +19,30 @@ public class TransactionServices {
 
     private final TransactionRepository transactionRepository;
     private final UserAuthRepository userAuthRepository;
-    private final AccountRepository accountRepository;
+    private final CategoriesService categoriesService;
+    private final AccountsServices accountsServices;
+
 
     public TransactionServices(TransactionRepository transactionRepository, UserAuthRepository userAuthRepository,
-                               AccountRepository accountRepository) {
+                               CategoriesService categoriesService, AccountsServices accountsServices) {
         this.transactionRepository = transactionRepository;
         this.userAuthRepository = userAuthRepository;
-        this.accountRepository = accountRepository;
+        this.categoriesService = categoriesService;
+        this.accountsServices = accountsServices;
     }
 
     @Transactional
     public String saveTransaction(@Valid @NotNull UserTransactionDTO dto) {
-        var account = accountRepository.getAccount(dto.email())
-                .orElseThrow(() -> new RuntimeException("Account not found"));
+        var account = accountsServices.getAccount(dto.email());
 
         System.out.println("--- Saving new transactions");
         TransactionEntity entity = new TransactionEntity();
         entity.setValue(dto.value());
         entity.setAccount(account);
-        entity.setCategory(dto.category());
+        entity.setCategory(categoriesService.getCategory(dto));
         entity.setDescription(dto.description());
+
+        accountsServices.updateBalance(dto);
 
         entity.setTransactionTime(java.sql.Date.from(Instant.now()));
 
@@ -67,9 +71,17 @@ public class TransactionServices {
         Date lastDay = java.sql.Date.valueOf(monthQuery + "31");
         Date firstDay = java.sql.Date.valueOf(monthQuery + "1");
 
-        return transactionRepository.getAllTrasactionsByMonth(firstDay, lastDay,
+        return transactionRepository.getAllTransactionsByMonth(firstDay, lastDay,
                 userAuthRepository.findIdByEmail(email));
     }
 
+    public List<TransactionFullDTO> getFullTransactionsByMonth(String email, Integer month){
+        System.out.printf("--- Getting all full transactions in the month %d \n", month);
+        String monthQuery = "2026-" + month + "-";
+        Date lastDay = java.sql.Date.valueOf(monthQuery + "31");
+        Date firstDay = java.sql.Date.valueOf(monthQuery + "1");
 
+        return transactionRepository.getAllFullTransactionsByMonth(firstDay, lastDay,
+                userAuthRepository.findIdByEmail(email));
+    }
 }

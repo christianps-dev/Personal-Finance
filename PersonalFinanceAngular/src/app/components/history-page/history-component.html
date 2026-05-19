@@ -1,0 +1,121 @@
+<div class="container-fluid p-4">
+  <div class="row dashboard-container rounded-5 shadow-lg">
+
+    <aside class="sidebar col-auto d-flex flex-column p-4">
+      <app-aside-component></app-aside-component>
+    </aside>
+
+    <main class="col p-4 text-light">
+
+      <header class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="fw-bold text-light opacity-75 mb-4 text-center">Transactions</h2>
+
+        <div class="col-md-3 col-lg-2 mb-4">
+          <label class="form-label d-flex align-items-center">
+            <i class="bi bi-calendar3 me-2 text-info"></i> Period
+          </label>
+
+          <div class="input-group custom-glass-select">
+            <select
+              class="form-select border-0"
+              [(ngModel)]="monthData"
+              (change)="updateMonth()"
+
+              >
+              <option value="" disabled selected>Select month...</option>
+              @for (month of months; track month){
+                <option [value]="month" class="bg-dark text-white">{{month}}</option>
+              }
+            </select>
+          </div>
+
+        </div>
+
+      </header>
+
+      <div class="col-12 col-lg-8 mx-auto my-3 transaction-div p-3 card-glassmorphism">
+
+        <div class="table-responsive round rounded-4">
+          <table class="table table-dark table-borderless align-middle text-center mb-0">
+
+            <thead>
+              <tr class="opacity-75 table-head-text">
+                <th scope="col">Type</th>
+                <th scope="col">Value</th>
+                <th scope="col">Category</th>
+                <th scope="col">Description</th>
+                <th scope="col">Date</th>
+              </tr>
+            </thead>
+
+            <tbody>
+
+              @for (trans of transactionsDisplayed; track trans) {
+
+                @if ($index > pageCounter * 7 - 1 && $index < pageCounter * 7 + 7) {
+                  <tr class="transaction-row">
+
+                  <td class=" opacity-75">
+                    <span class="badge" [ngClass]="trans.value < 0 ? 'bg-danger-subtle text-danger' : 'bg-success-subtle text-success'">
+                      {{ trans.value < 0 ? 'Expense' : 'Income' }}
+                    </span>
+                  </td>
+
+                  <td class="opacity-75" [ngClass]="trans.value < 0 ? 'text-danger fw-semibold' : 'text-success fw-semibold'">
+                    {{ (trans.value < 0 ? -trans.value / 100 : trans.value / 100) | currency:'BRL' }}
+                  </td>
+
+                  <td class="text-light opacity-75">{{ trans.category.charAt(0) }}{{trans.category.substring(1).toLowerCase()}}</td>
+
+                  <td class="text-light opacity-75 text-truncate" style="max-width: 150px;" [title]="trans.description">
+                    {{ trans.description || '—' }}
+                  </td>
+
+                  <td class="text-light opacity-75">
+                    {{ trans.date | date:'dd/MM/yyyy - HH:mm:ss' }}
+                  </td>
+
+                  </tr>
+                }
+
+              } @empty {
+                <tr>
+                  <td colspan="5" class=" text-light py-4">No transactions found for this month.</td>
+                </tr>
+              }
+
+            </tbody>
+
+          </table>
+
+          <div class="d-flex justify-content-center align-items-center gap-3 py-1 pagination-container">
+
+            <button
+              (click)="previousPageCounter()"
+              [disabled]="pageCounter === 0"
+              class="btn btn-pagination"
+              aria-label="Previous Page">
+              <i class="bi bi-chevron-left me-1"></i> Previous
+            </button>
+
+            <span class="page-indicator fw-semibold px-3 py-1 rounded-pill">
+              Page {{ pageCounter + 1 }}
+            </span>
+
+            <button
+              (click)="nextPageCounter()"
+              [disabled]="pageCounter + 1 == maxPages"
+              class="btn btn-pagination"
+              aria-label="Next Page">
+              Next <i class="bi bi-chevron-right ms-1"></i>
+            </button>
+
+          </div>
+
+        </div>
+
+    </div>
+
+    </main>
+  </div>
+</div>

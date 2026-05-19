@@ -3,12 +3,12 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { getLastTransactionDTO } from '../../models/transactions-dto/getTransactionDTO';
 import { UserGenericDTO } from '../../models/user-generic-dto';
-import { CurrencyPipe } from '@angular/common';
+import { CurrencyPipe, DatePipe } from '@angular/common';
 import { AsideComponent } from "../aside-component/aside-component/aside-component";
 
 @Component({
   selector: 'app-finance-form',
-  imports: [ReactiveFormsModule, CurrencyPipe, AsideComponent],
+  imports: [ReactiveFormsModule, CurrencyPipe, AsideComponent, DatePipe],
   templateUrl: './finance-form.html',
   styleUrls: ['./finance-form.css']
 })
@@ -19,8 +19,8 @@ export class FinanceForm implements OnInit{
      private cdr: ChangeDetectorRef
     ){}
 
-  expensesCategories = ['Food', 'Transport', 'Leisure', 'Health', 'Housing', 'Income', 'Others'];
-  incomeCategories = ['Job', 'Freelance', 'Gift', 'Other']
+  expensesCategories = ['Food', 'Transport', 'Leisure', 'Health', 'Housing', 'Others'];
+  incomeCategories = ['Job', 'Freelance', 'Gift', 'Others']
 
   financeForm = new FormGroup ({
     description: new FormControl(''),

@@ -24,10 +24,4 @@ public interface UserAuthRepository extends JpaRepository<UserEntity, Long> {
 
     @Query("SELECT u.id FROM user u WHERE u.email = :email")
     Long findIdByEmail(String email);
-
-    @Modifying
-    @Transactional
-    @Query("UPDATE user u SET u.password = :newPassword WHERE u.id = :userId")
-    void changeUserPassword(Long userId, String newPassword);
-
 }

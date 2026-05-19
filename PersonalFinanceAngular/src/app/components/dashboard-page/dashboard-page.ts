@@ -6,11 +6,13 @@ import { AsideComponent } from "../aside-component/aside-component/aside-compone
 import { getLastTransactionDTO } from '../../models/transactions-dto/getTransactionDTO';
 import { Chart, registerables} from 'chart.js';
 import { UserGenericDTO } from '../../models/user-generic-dto';
+import { FormsModule, ɵInternalFormsSharedModule } from '@angular/forms';
+import { TabelaServices } from '../../services/general-service/chart-services';
 Chart.register(...registerables)
 
 @Component({
   selector: 'app-dashboard-page',
-  imports: [CurrencyPipe, AsideComponent],
+  imports: [CurrencyPipe, AsideComponent, ɵInternalFormsSharedModule, FormsModule],
   templateUrl: './dashboard-page.html',
   styleUrl: './dashboard-page.css',
 })
@@ -18,8 +20,14 @@ Chart.register(...registerables)
 
 export class DashboardPage implements OnInit {
 
-  totalMonthly: DashboardFinancesDTO = { incomes: 0, expenses: 0 };
-  months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  monthData = "";
+
+  totalMonthly: DashboardFinancesDTO = { incomes: 0, expenses: 0, balance: 0 };
+
+  months = ['January', 'February', 'March', 'April', 'May', 'June',
+     'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+
   typeChart = 'bar';
 
   userCredentials: UserGenericDTO = {
@@ -27,30 +35,32 @@ export class DashboardPage implements OnInit {
     username: sessionStorage.getItem("username") ?? ''
   };
 
-  chartCategories = ['Food', 'Transport', 'Leisure', 'Health', 'Housing', 'Others', 'Job', 'Freelance', 'Gift', 'Other'];
+  chartCategories = ['FOOD', 'TRANSPORT', 'LEISURE', 'HEALTH', 'HOUSING',
+     'OTHERS', 'JOB', 'FREELANCE', 'GIFT',
+  ];
 
   everyExpenses: { [key: string]: number } = {
-    'Food': 0, 'Transport': 0, 'Leisure': 0, 'Health': 0, 'Housing': 0, 'Others': 0 };
+    'FOOD': 0, 'TRANSPORT': 0, 'LEISURE': 0, 'HEALTH': 0, 'HOUSING': 0, 'OTHERS': 0 };
 
   everyIncomes: { [key: string]: number } = {
-    'Job' : 0, 'Freelance' : 0, 'Gift' : 0, 'Other': 0 };
+    'JOB' : 0, 'FREELANCE' : 0, 'GIFT' : 0, 'OTHERS': 0 };
 
   financeChart: any;
 
-  constructor(private finance: Finances, private cdr: ChangeDetectorRef) {}
+  constructor(private finance: Finances, private cdr: ChangeDetectorRef,private graficos: TabelaServices) {}
 
   public ngOnInit(): void {
-    this.createChart();
-    this.getAllTransactionsDashboard();
+    this.financeChart = this.graficos.createChart(this.typeChart, this.chartCategories);
   }
 
-  public getAllTransactionsDashboard(): void {
-    this.finance.getAllTransactions(this.userCredentials).subscribe({
+  public getAllByMonth(month : number): void {
+    this.finance.getAllTransactionsByMonth(this.userCredentials.email, month).subscribe({
       next: (transactions: getLastTransactionDTO[]) => {
-        this.totalMonthly = { incomes: 0, expenses: 0 };
         this.chartCategories.forEach(cat => this.everyExpenses[cat] = 0);
+        this.resetFinacesData();
 
         for (let t of transactions) {
+
           if (t.value < 0) {
             this.totalMonthly.expenses += t.value;
 
@@ -81,14 +91,13 @@ export class DashboardPage implements OnInit {
 
   public setChartType(type: string) {
     this.typeChart = type;
-    this.destroyChart(this.financeChart);
-    this.createChart();
-    this.getAllTransactionsDashboard()
-
+    this.graficos.destroyChart(this.financeChart);
+    this.financeChart = this.graficos.createChart(this.typeChart, this.chartCategories);
+    this.updateMonth();
   }
 
-  public destroyChart(chart: Chart){
-    chart.destroy()
+  public updateMonth(){
+    this.getAllByMonth(this.months.indexOf(this.monthData) + 1);
   }
 
   public updateChart(): void{
@@ -128,12 +137,12 @@ export class DashboardPage implements OnInit {
           },
           scales: {
             x: {
-              stacked: true,
+              stacked: false,
               grid: { display: false },
               ticks: { color: '#ffffff' }
             },
             y: {
-              stacked: true,
+              stacked: false,
               beginAtZero: true,
               grid: { color: 'rgba(255, 255, 255, 0.1)' },
               ticks: { color: '#ffffff' }
@@ -164,7 +173,7 @@ export class DashboardPage implements OnInit {
         this.financeChart.data.datasets[0].data = dataValues;
         this.financeChart.data.datasets[0].backgroundColor = colors;
 
-        this.financeChart.options.plugins.tooltip.callbacks.label = (context: any) => {
+        this.financeChart.options.plugins!.tooltip!.callbacks!.label = (context: any) => {
           const label = context.label;
           const value = context.parsed;
           const isIncome = activeIncomes.includes(label);
@@ -180,79 +189,64 @@ export class DashboardPage implements OnInit {
 
         this.financeChart.update();
       }
-    }
 
-  }
+      if(this.typeChart === "pie"){
+      const activeExpenses = Object.keys(this.everyExpenses).filter(cat => this.everyExpenses[cat] > 0);
+      const activeIncomes = Object.keys(this.everyIncomes).filter(cat => this.everyIncomes[cat] > 0);
 
-  public createChart(): void {
+      const allLabels = [...activeExpenses, ...activeIncomes];
 
-    if(this.typeChart === "bar") {
+      const dataValues = [
+        ...activeExpenses.map(cat => this.everyExpenses[cat]),
+        ...activeIncomes.map(cat => this.everyIncomes[cat])
+      ];
 
-      this.financeChart = new Chart("Finance-chart", {
-      type: 'bar',
-      data: {
-        labels: this.chartCategories,
-        datasets: [
-          {
-            label: 'Expenses',
-            data: [],
-            backgroundColor: '#d32823',
-            borderRadius: 6,
-            borderSkipped: false,
-          },
-          {
-            label: 'Incomes',
-            data: [],
-            backgroundColor: '#6ab70b',
-            borderRadius: 6,
-            borderSkipped: false,
-          }
-        ],
-      },
-      options: { aspectRatio: 2 }
-      });
-    }
+      const colors = [
+        ...activeExpenses.map(() => '#d32823'),
+        ...activeIncomes.map(() => '#6ab70b')
+      ];
 
-    if(this.typeChart === "doughnut") {
-      this.financeChart = new Chart("Finance-chart", {
-      type: 'doughnut',
-      data: {
-        labels: [],
-        datasets: [{
-          label: 'Despesas por Categoria',
-          data: [],
-          backgroundColor: [
-            '#d32823', '#f39c12', '#3498db', '#9b59b6', '#1abc9c', '#34495e', '#e67e22'
-          ],
-          borderWidth: 1,
-          borderColor: '#ffffff',
-          hoverOffset: 20
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            position: 'right',
-            labels: { color: '#ffffff', padding: 20 }
-          },
-          tooltip: {
-            callbacks: {
-              label: (context: any) => {
-                const value = context.parsed;
-                const total = context.dataset.data.reduce((a: number, b: number) => a + b, 0);
-                const percentage = ((value / total) * 100).toFixed(1);
-                const formattedValue = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
-                return `${context.label}: ${formattedValue} (${percentage}%)`;
-              }
-            }
-          }
-        },
-        cutout: '70%'
+      this.financeChart.data.labels = allLabels;
+      this.financeChart.data.datasets[0].data = dataValues;
+      this.financeChart.data.datasets[0].backgroundColor = colors;
+
+      this.financeChart.options.plugins!.tooltip!.callbacks!.label = (context: any) => {
+        const label = context.label;
+        const value = context.parsed;
+        const isIncome = activeIncomes.includes(label);
+        const type = isIncome ? 'Income' : 'Expenses';
+
+        const formatted = new Intl.NumberFormat('pt-BR', {
+          style: 'currency',
+          currency: 'BRL'
+        }).format(value);
+
+        return `${type} - ${label}: ${formatted}`;
+      };
+
+      this.financeChart.update();
       }
-    });
     }
-
   }
+
+  private resetFinacesData(){
+    this.everyExpenses = {
+    'FOOD': 0, 'TRANSPORT': 0, 'LEISURE': 0, 'HEALTH': 0, 'HOUSING': 0, 'OTHERS': 0 };
+
+    this.everyIncomes = {
+    'JOB' : 0, 'FREELANCE' : 0, 'GIFT' : 0, 'OTHERS': 0 };
+
+    this.totalMonthly = { incomes: 0, expenses: 0, balance: 0 };
+  }
+
+  /*
+  private updateAccBalance(): void{
+    this.finance.getAccountBalance(this.userCredentials.email).subscribe({
+      next: (nxt) => {this.totalMonthly.balance = nxt.balance / 100,
+        this.cdr.detectChanges()
+      },
+      error: (err) => console.log("Account not found" + err)
+    })
+  }
+    */
 }

@@ -16,7 +16,7 @@ public class AccountEntity {
     private Long accountId;
 
     @OneToOne
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "user_id")
     private UserEntity user;
 
     @NonNull

@@ -3,6 +3,8 @@ import { Enviroment } from './../../enviroment';
 import { Injectable } from '@angular/core';
 import { getLastTransactionDTO } from '../models/transactions-dto/getTransactionDTO';
 import { UserGenericDTO } from '../models/user-generic-dto';
+import { AccountBalanceDTO } from '../models/transactions-dto/account-balance-dto'
+import { FullTransactionDTO } from '../models/transactions-dto/full-transaction-dto';
 
 @Injectable({
   providedIn: 'root',
@@ -33,4 +35,26 @@ export class Finances {
     };
     return this.http.get<getLastTransactionDTO[]>(this.transactionURL + "/transactions", req)
   }
+
+  getAllTransactionsByMonth(email: string, month: number){
+    const req = {
+      params: new HttpParams().set('email', email)
+    };
+    return this.http.get<getLastTransactionDTO[]>(this.transactionURL + "/transactions/" + month, req)
+  }
+
+  public getAccountBalance(email: string){
+    const req = {
+      params: new HttpParams().set('email', email)
+    };
+    return this.http.get<AccountBalanceDTO>(this.transactionURL + "/account", req);
+  }
+
+  public getFullTransactionsByMonth(email: string, month: number){
+    const req = {
+      params: new HttpParams().set('email', email)
+    };
+    return this.http.get<FullTransactionDTO[]>(this.transactionURL + "/transactions/full/" + month, req);
+  }
+
 }

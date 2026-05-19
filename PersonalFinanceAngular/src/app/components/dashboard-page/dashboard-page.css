@@ -74,7 +74,6 @@
 
 
 .chart-controls {
-  /* Container para agrupar os botões como se fossem um switch */
   background: rgba(255, 255, 255, 0.05);
   padding: 5px;
   border-radius: 16px;
@@ -95,13 +94,11 @@
   user-select: none;
 }
 
-/* Efeito de Hover */
 .type-option:hover {
   color: rgba(255, 255, 255, 0.9);
   background: rgba(255, 255, 255, 0.05);
 }
 
-/* Estado Ativo (Onde a mágica acontece) */
 .type-option.active {
   color: #ffffff;
   background: rgba(255, 255, 255, 0.15);

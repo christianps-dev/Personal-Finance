@@ -6,6 +6,7 @@
     </aside>
 
     <main class="col p-4 text-light">
+
       <header class="d-flex justify-content-between align-items-center mb-3">
         <h2 class="fw-bold m-0">Welcome back, <span class="text-info">{{userCredentials.username}}</span></h2>
 
@@ -15,7 +16,11 @@
           </label>
 
           <div class="input-group custom-glass-select">
-            <select class="form-select border-0" formControlName="month">
+            <select
+              class="form-select border-0"
+              [(ngModel)]="monthData"
+              (change)="updateMonth()"
+              >
               <option value="" disabled selected>Select month...</option>
               @for (month of months; track month){
                 <option [value]="month" class="bg-dark text-white">{{month}}</option>
@@ -27,17 +32,26 @@
       </header>
 
       <div class="chart-controls d-flex justify-content-center my-1">
+
         <a (click)="setChartType('bar')"
           class="type-option"
           [class.active]="typeChart === 'bar'">
-          Bar Chart
+          <i class="bi bi-bar-chart mx-1"></i>Bar Chart
         </a>
+
         <a (click)="setChartType('doughnut')"
           class="type-option"
           [class.active]="typeChart === 'doughnut'">
+          <i class="bi bi-pie-chart mx-1"></i>
           Doughnut Chart
         </a>
-    </div>
+        <a (click)="setChartType('pie')"
+          class="type-option"
+          [class.active]="typeChart === 'pie'">
+          <i class="bi bi-pie-chart-fill"></i>
+          Pie Chart
+        </a>
+      </div>
 
       <div class="row g-4">
 
@@ -69,6 +83,7 @@
         </div>
 
       </div>
+
     </main>
 
   </div>

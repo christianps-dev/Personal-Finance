@@ -1,8 +1,13 @@
 package org.alunosufg.personalfinancespring.controller;
 
 import jakarta.validation.Valid;
+import org.alunosufg.personalfinancespring.dto.transactions.AccountDTO;
 import org.alunosufg.personalfinancespring.dto.transactions.TransactionDTO;
+import org.alunosufg.personalfinancespring.dto.transactions.TransactionFullDTO;
 import org.alunosufg.personalfinancespring.dto.transactions.UserTransactionDTO;
+import org.alunosufg.personalfinancespring.entities.AccountEntity;
+import org.alunosufg.personalfinancespring.repository.AccountRepository;
+import org.alunosufg.personalfinancespring.services.AccountsServices;
 import org.alunosufg.personalfinancespring.services.TransactionServices;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +20,12 @@ import java.util.List;
 public class FinanceController {
 
     private final TransactionServices transactionService;
+    private final AccountsServices accountsServices;
 
-    public FinanceController(TransactionServices transactionServices) {
+    public FinanceController(TransactionServices transactionServices,
+                             AccountsServices accountsServices) {
         this.transactionService = transactionServices;
+        this.accountsServices = accountsServices;
     }
 
     @PostMapping("/transaction")
@@ -56,6 +64,25 @@ public class FinanceController {
             @PathVariable Integer month) {
         System.out.println("--- Getting all transactions by month");
         List<TransactionDTO> transactions = transactionService.getALlTransactionsByMonth(email, month);
+        return ResponseEntity.ok(transactions);
+    }
+
+    @GetMapping("/account")
+    public ResponseEntity<AccountDTO> getAccountInfo(
+            @RequestParam String email) {
+        System.out.println("--- Getting Account: " + email);
+        AccountEntity account = accountsServices.getAccount(email);
+
+        return ResponseEntity.ok(new AccountDTO(account.getAccountBalance()));
+    }
+
+    @GetMapping("/transactions/full/{month}")
+    public ResponseEntity<List<TransactionFullDTO>> getFullTransactionsByMonth(
+            @PathVariable Integer month,
+            @RequestParam String email){
+        System.out.println("--- Getting full transactions");
+
+        List<TransactionFullDTO> transactions = transactionService.getFullTransactionsByMonth(email, month);
         return ResponseEntity.ok(transactions);
     }
 }

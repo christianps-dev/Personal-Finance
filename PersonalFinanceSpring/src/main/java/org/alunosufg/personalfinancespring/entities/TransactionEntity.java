@@ -1,7 +1,6 @@
 package org.alunosufg.personalfinancespring.entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.util.Date;
@@ -29,8 +28,9 @@ public class TransactionEntity {
     private Date transactionTime;
 
     @NonNull
-    @NotBlank
-    private String category;
+    @ManyToOne
+    @JoinColumn(name = "category")
+    private CategoryEntity category;
 
     private String description;
 
