@@ -1,11 +1,10 @@
 import { CurrencyPipe, DatePipe, NgClass } from '@angular/common';
 import { UserGenericDTO } from './../../models/user-generic-dto';
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { AsideComponent } from "../aside-component/aside-component/aside-component";
+import { AsideComponent } from "../aside-component/aside-component";
 import { FormsModule } from "@angular/forms";
 import { FullTransactionDTO } from '../../models/transactions-dto/full-transaction-dto';
-import { Finances } from '../../services/finances';
-import { max } from 'rxjs';
+import { Finances } from '../../services/transactions/finances';
 
 @Component({
   selector: 'app-history-component',
@@ -35,13 +34,13 @@ export class HistoryPage {
 
   public updateMonth(){
     this.finances.getFullTransactionsByMonth(this.userCredentials.email, (this.months.indexOf(this.monthData)) + 1).subscribe({
-      next: (nxt) => (
-        this.transactionsDisplayed = nxt,
-        this.maxPages = nxt.length / 7,
-        console.log(this.maxPages),
-        this.cdr.detectChanges()
-      ),
-      error: (err) => console.log("Error while getting transacitons " + err)
+      next: (nxt) => {
+        this.transactionsDisplayed = nxt
+        this.maxPages = nxt.length / 7;
+        console.log(this.maxPages);
+        this.cdr.detectChanges();
+      },
+      error: (err) => console.log("Error while getting transactions " + err)
     })
 
   }

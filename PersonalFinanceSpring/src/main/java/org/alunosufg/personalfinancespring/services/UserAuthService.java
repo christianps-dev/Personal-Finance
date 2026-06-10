@@ -20,7 +20,7 @@ import java.util.Objects;
 @Service
 public class UserAuthService {
 
-    UserAuthRepository userAuthRepository;
+    private final UserAuthRepository userAuthRepository;
     PasswordEncoder passwordEncoder;
     TokenService tokenService;
     AccountRepository accountRepository;
@@ -77,8 +77,7 @@ public class UserAuthService {
 
     @Transactional
     public void changePassword(ChangePasswordDTO body) {
-        UserEntity user = userAuthRepository.findByEmail(body.email())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        UserEntity user = getUser(body.email());
 
         if (!passwordEncoder.matches(body.password(), user.getPassword())) {
             throw new RuntimeException("Current password incorrect");
@@ -90,6 +89,14 @@ public class UserAuthService {
 
         user.setPassword(Objects.requireNonNull(passwordEncoder.encode(body.newPassword())));
         userAuthRepository.save(user);
+    }
+
+    public UserEntity getUser(String email){
+        return userAuthRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User Not Found"));
+    }
+
+    public Long getUserId(String email){
+        return userAuthRepository.getIdByEmail(email).orElseThrow(() -> new RuntimeException("User Not Found"));
     }
 
 

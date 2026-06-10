@@ -1,13 +1,10 @@
 package org.alunosufg.personalfinancespring.controller;
 
 import jakarta.validation.Valid;
-import org.alunosufg.personalfinancespring.dto.transactions.AccountDTO;
-import org.alunosufg.personalfinancespring.dto.transactions.TransactionDTO;
-import org.alunosufg.personalfinancespring.dto.transactions.TransactionFullDTO;
-import org.alunosufg.personalfinancespring.dto.transactions.UserTransactionDTO;
+import org.alunosufg.personalfinancespring.dto.transactions.*;
 import org.alunosufg.personalfinancespring.entities.AccountEntity;
-import org.alunosufg.personalfinancespring.repository.AccountRepository;
 import org.alunosufg.personalfinancespring.services.AccountsServices;
+import org.alunosufg.personalfinancespring.services.BudgetServices;
 import org.alunosufg.personalfinancespring.services.TransactionServices;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,11 +18,14 @@ public class FinanceController {
 
     private final TransactionServices transactionService;
     private final AccountsServices accountsServices;
+    private final BudgetServices budgetServices;
 
     public FinanceController(TransactionServices transactionServices,
-                             AccountsServices accountsServices) {
+                             AccountsServices accountsServices,
+                             BudgetServices budgetServices) {
         this.transactionService = transactionServices;
         this.accountsServices = accountsServices;
+        this.budgetServices = budgetServices;
     }
 
     @PostMapping("/transaction")
@@ -85,4 +85,24 @@ public class FinanceController {
         List<TransactionFullDTO> transactions = transactionService.getFullTransactionsByMonth(email, month);
         return ResponseEntity.ok(transactions);
     }
+
+    @PostMapping("/budget")
+    public ResponseEntity<BudgetDTO> addNewBudget(@RequestBody BudgetDTO budgetLimit,
+                                             @RequestParam String email){
+        System.out.println("Adding new budget");
+
+        BudgetDTO budget = budgetServices.addNewBudget(budgetLimit, email);
+        return ResponseEntity.ok(budget);
+
+    }
+    @GetMapping("/budgets/{month}")
+    public ResponseEntity<List<BudgetDTO>> getBudgets(@RequestParam String email,
+                                                         @PathVariable Integer month){
+        System.out.println("--- Getting budgets");
+
+        List<BudgetDTO> budgets = budgetServices.getBudgets(email, month);
+        return ResponseEntity.ok(budgets);
+
+    }
+
 }

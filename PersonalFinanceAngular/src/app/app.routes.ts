@@ -6,6 +6,7 @@ import { routeGuard } from './security/auth-security/route-guard-guard';
 import { FinanceForm } from './components/finance-form/finance-form';
 import { ProfilePage } from './components/profile-page/profile-page';
 import { HistoryPage } from './components/history-page/history-component';
+import { BudgetPage } from './components/budget-page/budget-page';
 
 export const routes: Routes = [
     {
@@ -34,6 +35,11 @@ export const routes: Routes = [
     {
       path: 'history',
       component: HistoryPage,
+      canActivate:[routeGuard]
+    },
+    {
+      path: 'budgets',
+      component: BudgetPage,
       canActivate:[routeGuard]
     },
     {

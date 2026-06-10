@@ -1,10 +1,10 @@
-import { Finances } from './../../services/finances';
+import { Finances } from './../../services/transactions/finances';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { getLastTransactionDTO } from '../../models/transactions-dto/getTransactionDTO';
 import { UserGenericDTO } from '../../models/user-generic-dto';
 import { CurrencyPipe, DatePipe } from '@angular/common';
-import { AsideComponent } from "../aside-component/aside-component/aside-component";
+import { AsideComponent } from "../aside-component/aside-component";
 
 @Component({
   selector: 'app-finance-form',

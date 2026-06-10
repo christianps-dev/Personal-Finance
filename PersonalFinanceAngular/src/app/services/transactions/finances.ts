@@ -1,10 +1,10 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Enviroment } from './../../enviroment';
+import { Enviroment } from '../../../enviroment';
 import { Injectable } from '@angular/core';
-import { getLastTransactionDTO } from '../models/transactions-dto/getTransactionDTO';
-import { UserGenericDTO } from '../models/user-generic-dto';
-import { AccountBalanceDTO } from '../models/transactions-dto/account-balance-dto'
-import { FullTransactionDTO } from '../models/transactions-dto/full-transaction-dto';
+import { getLastTransactionDTO } from '../../models/transactions-dto/getTransactionDTO';
+import { UserGenericDTO } from '../../models/user-generic-dto';
+import { AccountBalanceDTO } from '../../models/transactions-dto/account-balance-dto'
+import { FullTransactionDTO } from '../../models/transactions-dto/full-transaction-dto';
 
 @Injectable({
   providedIn: 'root',

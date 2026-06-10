@@ -1,0 +1,170 @@
+<div class="container-fluid p-4">
+  <div class="row dashboard-container rounded-5 shadow-lg">
+
+    <aside class="sidebar col-auto d-flex flex-column p-4">
+      <app-aside-component></app-aside-component>
+    </aside>
+
+    <div class="col-11 col-md-8 col-lg-6 p-4">
+
+      <h2 class="text-center text-white mb-4 opacity-75 fw-bold">Budgets</h2>
+      <main class="glass-card dark-placeholder shadow-lg overflow-hidden">
+        <div class="card-body p-4 p-md-5">
+
+          <form [formGroup]="budgetForm" (ngSubmit)="addBudget()">
+
+            <div class="row g-3 ">
+
+              <div class="col-md-6 mb-2">
+                <label class="form-label">Value (R$)</label>
+
+                <div class=" input-group m-2">
+                  <div class="input-group">
+                  <span class="input-group-text bg-white border-0 rounded-start-4 fw-bold text-secondary">R$</span>
+                  <input type="number" class="form-control rounded-end-4" formControlName="value" placeholder="0.00">
+                </div>
+              </div>
+
+              </div>
+
+
+              <div class="col-md-6 mb-2">
+                <label class="form-label">Category</label>
+
+                <div class=" input-group custom-glass-select m-2">
+                  <i class="bi bi-bookmark-check-fill py-3 px-2"></i>
+                  <select class="form-select border-0 rounded-4" formControlName="category">
+                    <option value="" disabled selected>Select...</option>
+                    @for (ctg of categories; track ctg){
+                      <option [value]="ctg" class="bg-dark text-white">{{ctg}}</option>
+                    }
+                  </select>
+                </div>
+
+              </div>
+
+              <div class="col-md-6 mb-4">
+                <label class="form-label">Month</label>
+
+                <div class=" input-group custom-glass-select m-2">
+                  <i class="bi bi-calendar-check-fill py-3 px-2"></i>
+
+                  <select class="form-select border-0" formControlName="month">
+
+                    <option value="" disabled selected>Select...</option>
+                    @for (month of months; track month){
+                      <option [value]="month" class="bg-dark text-white">{{month}}</option>
+                    }
+                  </select>
+                </div>
+              </div>
+
+
+            </div>
+
+            @if (budgetForm.get('value')?.invalid && budgetForm.get('value')?.touched) {
+              <div class="alert-box mb-4">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                Use dots (<b>.</b>) for decimals.
+              </div>
+            }
+
+            <button [disabled]="budgetForm.invalid" type="submit"
+                    class="w-100 btn btn-lg btn-add text-white fw-bold shadow py-3 transition-all">
+              <i class="bi bi-check-circle me-2"></i> Confirm Transaction
+            </button>
+          </form>
+        </div>
+      </main>
+    </div>
+
+    <div class="col-11 col-md-3 col-lg-3 mx-4 my-3 transaction-div px-3 py-3">
+
+      <div class="row">
+
+        <h2 class="col-6 fw-bold text-light opacity-75 my-4 text-center">Budgets</h2>
+
+        <div class="col input-group custom-glass-select my-3 mx-1">
+            <i class="bi bi-calendar py-3 px-2"></i>
+
+            <select
+              class="form-select border-0"
+              [(ngModel)]="monthData"
+              (change)="updateBudgetsPanel()"
+              >
+              <option value="" disabled selected>Month...</option>
+              @for (month of months; track month){
+                <option [value]="month" class="bg-dark text-white">{{month}}</option>
+              }
+            </select>
+          </div>
+
+      </div>
+
+      <div class="transaction-unit mt-3 p-4 dark-bg text-light">
+
+        <div class="row text-center fw-bold text-uppercase opacity-50 small mb-3 letter-spacing-1">
+          <div class="col-6 text-start ps-4">Category</div>
+          <div class="col-6 text-end pe-4">Budget Limit</div>
+        </div>
+
+        <div class="d-flex flex-column gap-2">
+          @for (bdg of budgetList; track bdg.category) {
+            @if ($index > pageCounter * maxItemsPerPage - 1 && $index < pageCounter * maxItemsPerPage + maxItemsPerPage){
+              <div class="row align-items-center py-3 px-2 budget-row rounded-4 text-center">
+
+                <div class="col-6 text-start ps-3 fw-bold h6 mb-0">
+                  <i class="bi bi-tag-fill me-2 text-info"></i>
+                  {{ bdg.category }}
+                </div>
+
+                <div class="col-6 text-end pe-3 fw-bold h6 mb-0 text-break">
+                  {{ (bdg.budgetLimit || 0) | currency:'BRL' }}
+                </div>
+
+              </div>
+            }
+          } @empty {
+            <div class="text-center py-4 opacity-50 font-italic small">
+              <i class="bi bi-folder-x d-block fs-3 mb-2"></i>
+              No budgets defined for this period.
+            </div>
+          }
+
+          <div class="d-flex justify-content-between align-items-center gap-1 mt-4 pt-2 border-top border-white-50 pagination-container">
+
+            <button
+              type="button"
+              (click)="previousPageCounter()"
+              [disabled]="pageCounter === 0"
+              class="btn btn-pagination d-flex align-items-center gap-1"
+              aria-label="Previous Page">
+              <i class="bi bi-chevron-left"></i>
+              <span class="d-none d-sm-inline">Prev</span>
+            </button>
+
+            <div class="page-indicator-pill px-3 py-1.5 rounded-pill shadow-sm text-center">
+              <span class="small opacity-50 me-1">Page</span>
+              <strong class="text-info">{{ pageCounter + 1 }}</strong>
+              <span class="small opacity-50 mx-1">of</span>
+              <strong class="opacity-75">{{ maxPages }}</strong>
+            </div>
+
+            <button
+              type="button"
+              (click)="nextPageCounter()"
+              [disabled]="(pageCounter + 1) >= maxPages"
+              class="btn btn-pagination d-flex align-items-center gap-1"
+              aria-label="Next Page">
+              <span class="d-none d-sm-inline">Next</span>
+              <i class="bi bi-chevron-right"></i>
+            </button>
+
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -95,18 +95,18 @@
       @for (trans of transactionsDisplayed; track trans.value) {
 
         @if (trans.value < 0) {
-          <div class="container transaction-unit expense-unit mb-2 text-light fw-bold opacity-75 p-4 h4">
+          <div class="container transaction-unit expense-unit mb-2 text-light fw-bold opacity-75 p-3 h4">
             Value: <strong class="h5 mb-1">{{(trans.value / 100 * -1 || 0) | currency:'BRL'}}</strong><br class="mb-1">
             Type: <strong class="h5">Expense</strong><br class="mb-1">
-            Date: <strong class="h5"><span>{{trans.date | date: 'dd/MM/yyyy - HH:mm'}}</span></strong>
+            Date: <strong class="h6"><span>{{trans.date | date: 'dd/MM/yyyy - HH:mm'}}</span></strong>
           </div>
         }
 
         @else{
-          <div class="container transaction-unit income-unit mt-2 text-light fw-bold opacity-75 p-4 h4">
+          <div class="container transaction-unit income-unit mt-2 text-light fw-bold opacity-75 p-3 h4">
             Value: <strong class="h5 mb-1">{{(trans.value / 100 || 0) | currency:'BRL'}}</strong><br class="mb-1">
             Type: <strong class="h5">Income</strong><br class="mb-1">
-            Date: <strong class="h5"><span>{{trans.date.substring(0, 10).replaceAll('-', '/')}}</span></strong>
+            Date: <strong class="h6"><span>{{trans.date | date: 'dd/MM/yyyy - HH:mm'}}</span></strong>
           </div>
         }
       }

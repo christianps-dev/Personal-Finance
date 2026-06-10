@@ -49,4 +49,7 @@ public class CategoriesService {
         }
     }
 
+    public Long getCategoryId(String ctg){
+        return categoryRepository.getCategoryId(ctg.toUpperCase()).orElseThrow(() -> new RuntimeException("Category not found"));
+    }
 }

@@ -1,8 +1,8 @@
-import { Finances } from './../../services/finances';
+import { Finances } from '../../services/transactions/finances';
 import { CurrencyPipe } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { DashboardFinancesDTO } from '../../models/transactions-dto/dashboard-dto';
-import { AsideComponent } from "../aside-component/aside-component/aside-component";
+import { AsideComponent } from "../aside-component/aside-component";
 import { getLastTransactionDTO } from '../../models/transactions-dto/getTransactionDTO';
 import { Chart, registerables} from 'chart.js';
 import { UserGenericDTO } from '../../models/user-generic-dto';

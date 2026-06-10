@@ -1,15 +1,18 @@
 <div class="text-center mb-5 px-5">
-  <img class="rounded-circle border border-3 border-opacity-25 border-light shadow"
+
+  <a class="nav-link-custom"
+    routerLink="/profile"
+    routerLinkActive="active">
+    <img class="rounded-circle  border-3 border-opacity-25 border-light shadow"
         src="./../../../../..//public/icons/profile_icon.png"
         alt="Profile" width="80">
-  <h6 class="text-light mt-3 opacity-75">Admin Account</h6>
+    </a>
+    <h6 class="text-light mt-2 opacity-75">Admin</h6>
+
+
 </div>
 
 <nav class="nav flex-column fw-bold">
-  <a class="nav-link-custom"
-    routerLink="/profile"
-    routerLinkActive="active"
-    ><i class="bi bi-person"></i> Profile</a>
 
   <a class="nav-link-custom"
     routerLink="/dashboard"
@@ -21,8 +24,13 @@
     routerLinkActive="active"><i class="bi-list-columns-reverse"></i> Transactions</a>
 
   <a class="nav-link-custom"
+    routerLink="/budgets"
+    routerLinkActive="active"><i class="bi bi-list-columns"></i> Budgets</a>
+
+  <a class="nav-link-custom"
     routerLink="/history"
     routerLinkActive="active"><i class="bi bi-bank"></i> History</a>
+
 
   <a class="nav-link-custom"><i class="bi bi-gear"></i> Settings</a>
 

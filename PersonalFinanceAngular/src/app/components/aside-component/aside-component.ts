@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLinkActive, RouterLinkWithHref } from '@angular/router';
-import { GeneralServices } from '../../../services/general-service/general-services';
+import { GeneralServices } from '../../services/general-service/general-services';
 
 @Component({
   selector: 'app-aside-component',

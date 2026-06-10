@@ -1,5 +1,5 @@
 import { Injectable, ChangeDetectorRef } from '@angular/core';
-import { Finances } from '../finances';
+import { Finances } from '../transactions/finances';
 import { Chart, registerables } from 'chart.js';
 Chart.register(...registerables)
 
