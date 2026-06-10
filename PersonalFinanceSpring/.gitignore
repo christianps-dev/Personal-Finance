@@ -34,3 +34,5 @@ build/
 
 ## Eviroment ###
 .env
+application.properties
+
