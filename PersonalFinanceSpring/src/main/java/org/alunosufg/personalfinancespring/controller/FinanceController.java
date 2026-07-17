@@ -1,6 +1,8 @@
 package org.alunosufg.personalfinancespring.controller;
 
 import jakarta.validation.Valid;
+import org.alunosufg.personalfinancespring.dto.budgets.BudgetDTO;
+import org.alunosufg.personalfinancespring.dto.budgets.BudgetLimitDTO;
 import org.alunosufg.personalfinancespring.dto.transactions.*;
 import org.alunosufg.personalfinancespring.entities.AccountEntity;
 import org.alunosufg.personalfinancespring.services.AccountsServices;
@@ -29,8 +31,9 @@ public class FinanceController {
     }
 
     @PostMapping("/transaction")
-    public ResponseEntity<String> saveNewTransaction(@Valid @RequestBody UserTransactionDTO newTransaction) {
-        String result = transactionService.saveTransaction(newTransaction);
+    public ResponseEntity<String> saveNewTransaction(@Valid @RequestBody UserTransactionDTO newTransaction,
+                                                      @RequestParam String email) {
+        String result = transactionService.saveTransaction(newTransaction, email);
         System.out.println("--- Saving new transaction");
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
@@ -88,7 +91,7 @@ public class FinanceController {
 
     @PostMapping("/budget")
     public ResponseEntity<BudgetDTO> addNewBudget(@RequestBody BudgetDTO budgetLimit,
-                                             @RequestParam String email){
+                                                  @RequestParam String email){
         System.out.println("Adding new budget");
 
         BudgetDTO budget = budgetServices.addNewBudget(budgetLimit, email);
@@ -105,4 +108,13 @@ public class FinanceController {
 
     }
 
+    @GetMapping("/budgets/spends/{month}")
+    public ResponseEntity<List<BudgetLimitDTO>> getBudgetsSpends(@RequestParam String email,
+                                                      @PathVariable Integer month){
+        System.out.println("--- Getting budgets spends");
+
+        List<BudgetLimitDTO> budgets = budgetServices.getBudgetsLimits(email, month);
+        return ResponseEntity.ok(budgets);
+
+    }
 }

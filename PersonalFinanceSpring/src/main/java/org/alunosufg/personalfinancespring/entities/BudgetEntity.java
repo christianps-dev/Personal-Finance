@@ -17,8 +17,8 @@ public class BudgetEntity {
 
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private UserEntity user;
+    @JoinColumn(name = "account_id")
+    private AccountEntity account;
 
     @ManyToOne
     @JoinColumn(name = "category_id")

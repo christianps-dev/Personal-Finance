@@ -1,16 +1,16 @@
-package org.alunosufg.personalfinancespring.dto.transactions;
+package org.alunosufg.personalfinancespring.dto.budgets;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
 @Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class BudgetDTO {
+public class BudgetsValueCtgDTO {
+
     private String category;
-    private Integer budgetLimit;
-    private Integer month;
+    private Long value;
 }

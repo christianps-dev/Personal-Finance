@@ -1,86 +1,78 @@
-import { Finances } from './../../services/transactions/finances';
+import { Finances } from '../../services/transactions/finances';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { getLastTransactionDTO } from '../../models/transactions-dto/getTransactionDTO';
 import { UserGenericDTO } from '../../models/user-generic-dto';
-import { CurrencyPipe, DatePipe } from '@angular/common';
+import { CurrencyPipe, DatePipe, NgClass } from '@angular/common';
 import { AsideComponent } from "../aside-component/aside-component";
 
 @Component({
   selector: 'app-finance-form',
-  imports: [ReactiveFormsModule, CurrencyPipe, AsideComponent, DatePipe],
+  imports: [ReactiveFormsModule, CurrencyPipe, AsideComponent, DatePipe, NgClass],
   templateUrl: './finance-form.html',
-  styleUrls: ['./finance-form.css']
+  styleUrls: ['./finance-form.css'],
 })
-
-export class FinanceForm implements OnInit{
-
-  constructor(private transaction : Finances,
-     private cdr: ChangeDetectorRef
-    ){}
+export class FinanceForm implements OnInit {
+  constructor(
+    private transaction: Finances,
+    private cdr: ChangeDetectorRef,
+  ) {}
 
   expensesCategories = ['Food', 'Transport', 'Leisure', 'Health', 'Housing', 'Others'];
-  incomeCategories = ['Job', 'Freelance', 'Gift', 'Others']
+  incomeCategories = ['Job', 'Freelance', 'Gift', 'Others'];
 
-  financeForm = new FormGroup ({
+  financeForm = new FormGroup({
     description: new FormControl(''),
-    value: new FormControl( 0, [Validators.required, Validators.nullValidator, Validators.min(1)]),
+    value: new FormControl(0, [Validators.required, Validators.nullValidator, Validators.min(1)]),
     category: new FormControl('', [Validators.required, Validators.nullValidator]),
-    type: new FormControl('expense', Validators.required)
-    }
-  )
+    type: new FormControl('expense', Validators.required),
+    date: new FormControl(''),
+  });
 
   qtdTransactionsMenu = 3;
 
-  ngOnInit(){
+  ngOnInit() {
     this.getLastTransactions(this.qtdTransactionsMenu);
   }
 
-  transactionsDisplayed? : getLastTransactionDTO[];
+  transactionsDisplayed?: getLastTransactionDTO[];
 
-
-  public addTransaction(){
-
+  public addTransaction() {
     const financeAdd = this.financeForm.value as TransactionDTO;
-    financeAdd.email = sessionStorage.getItem('email') ?? '';
     financeAdd.value = financeAdd.value * 100;
 
-    if (this.financeForm.value.type === 'expense')
-      financeAdd.value *= -1;
+    if (this.financeForm.value.type === 'expense') financeAdd.value *= -1;
 
     this.financeForm.reset();
 
     this.financeForm.setValue({
-            description: '',
-            value: 0,
-            category: '',
-            type: 'expense'
+      description: '',
+      value: 0,
+      category: '',
+      type: 'expense',
+      date: '',
     });
 
     this.transaction.addNewTransaction(financeAdd);
 
-    return this.getLastTransactions(this.qtdTransactionsMenu);
-
+    this.getLastTransactions(this.qtdTransactionsMenu);
   }
 
   public setTransactionType(type: 'income' | 'expense') {
-      this.financeForm.patchValue({ type: type });
+    this.financeForm.patchValue({ type: type });
   }
 
-  public getLastTransactions(qtd: number){
-    const user: UserGenericDTO = ({
+  public getLastTransactions(qtd: number) {
+    const user: UserGenericDTO = {
       email: sessionStorage.getItem('email') ?? '',
       username: sessionStorage.getItem('username') ?? '',
-
-      }
-    )
+    };
     this.transaction.getLastTransactionsByQtd(qtd, user).subscribe({
-      next: (nxt) => {this.transactionsDisplayed = nxt,
-            this.cdr.detectChanges();
-
+      next: (nxt) => {
+        this.transactionsDisplayed = nxt;
+        this.cdr.detectChanges();
       },
-      error: (err) => console.log("Error while getting trasactions", err)
+      error: (err) => console.log('Error while getting transactions', err),
     });
   }
-
 }

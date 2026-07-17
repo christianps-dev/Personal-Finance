@@ -32,19 +32,24 @@ public class TransactionServices {
     }
 
     @Transactional
-    public String saveTransaction(@Valid @NotNull UserTransactionDTO dto) {
-        var account = accountsServices.getAccount(dto.email());
+    public String saveTransaction(@Valid @NotNull UserTransactionDTO dto, String email) {
+        var account = accountsServices.getAccount(email);
 
         System.out.println("--- Saving new transactions");
         TransactionEntity entity = new TransactionEntity();
         entity.setValue(dto.value());
         entity.setAccount(account);
-        entity.setCategory(categoriesService.getCategory(dto));
+        entity.setCategory(categoriesService.getCategory(dto.category()));
         entity.setDescription(dto.description());
 
-        accountsServices.updateBalance(dto);
+        accountsServices.updateBalance(email, dto.value());
 
-        entity.setTransactionTime(java.sql.Date.from(Instant.now()));
+        if ( dto.date() != null) {
+            System.out.println("Date null: " + dto.date());
+            entity.setTransactionTime(dto.date());
+        }
+        else
+            entity.setTransactionTime(java.sql.Date.from(Instant.now()));
 
         transactionRepository.save(entity);
         return "Transaction saved successfully";
@@ -84,4 +89,5 @@ public class TransactionServices {
         return transactionRepository.getAllFullTransactionsByMonth(firstDay, lastDay,
                 userAuthRepository.findIdByEmail(email));
     }
+
 }

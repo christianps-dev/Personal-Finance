@@ -16,10 +16,17 @@ export class Finances {
   constructor(private http : HttpClient){}
 
   addNewTransaction(transaction: TransactionDTO){
-    return this.http.post<TransactionDTO>(this.transactionURL + "/transaction", transaction).subscribe({
-      complete: () => console.log("Transaction successfuly"),
-      error: (err) => console.log("Transaction failed",err)
-    })
+    const email = sessionStorage.getItem('email') || "";
+    const params = new HttpParams().set('email', email);
+
+    this.http
+      .post<TransactionDTO>(this.transactionURL + "/transaction", transaction, { params })
+      .subscribe({
+        complete: () => console.log('Transaction successfully'),
+        error: (err) => console.log('Transaction failed', err),
+      });
+
+    return null;
   }
 
   getLastTransactionsByQtd(qtd: number, user: UserGenericDTO){

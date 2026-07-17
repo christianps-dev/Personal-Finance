@@ -1,5 +1,5 @@
 export interface BudgetDTO {
   category: string,
-  month: number,
+  month: any,
   budgetLimit: number
 }

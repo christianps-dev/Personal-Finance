@@ -31,7 +31,41 @@
 
       </header>
 
-      <div class="chart-controls d-flex justify-content-center my-1">
+      <div class="budget-carousel">
+
+        @for (budget of budgetsDashboard; track budget){
+          <div class="budget-card link-offset-1-hover">
+            <div class="budget-info text-center">
+              <span class="icon"></span><i class="bi bi-tag-fill me-2 text-info small"></i><span class="title">{{ budget.category }}</span>
+            </div>
+
+            <div class="progress-container ">
+              <div class="progress-bar" [style.width.%]="(budget.currentSpend * -1 / budget.budgetLimit) * 100"></div>
+            </div>
+
+            <div class="budget-info text-center">
+              <span class="spent">R$ {{ budget.currentSpend / -100 || 0 }}</span> / <span class="limit">R$ {{ budget.budgetLimit / 100 }}</span>
+            </div>
+
+            <div class="col-12 px-3 mt-2">
+              <div class="progress glass-progress-bg">
+                <div
+                  class="progress-bar transition-all"
+                  role="progressbar"
+                  [ngClass]="(budget.currentSpend / budget.budgetLimit) >= 1 ? 'bg-danger-gradient' : 'bg-info-gradient'"
+                  [style.width.%]="(budget.currentSpend / budget.budgetLimit) * 100">
+                </div>
+              </div>
+              @if ((budget.currentSpend / budget.budgetLimit) >= 1) {
+                <small class="text-danger fs-7 mt-1 d-block"><i class="bi bi-exclamation-circle-fill me-1"></i> Budget limit exceeded!</small>
+              }
+          </div>
+            </div>
+        }
+
+      </div>
+
+      <div class="chart-controls d-flex justify-content-center my-1 mb-2">
 
         <a (click)="setChartType('bar')"
           class="type-option"

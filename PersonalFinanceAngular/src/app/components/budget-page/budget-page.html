@@ -5,166 +5,125 @@
       <app-aside-component></app-aside-component>
     </aside>
 
-    <div class="col-11 col-md-8 col-lg-6 p-4">
+    <div class="col-8 col-md-7 col-lg-6 p-4">
+      <h2 class="text-start text-white mb-4 opacity-75 fw-bold px-2">Budgets</h2>
 
-      <h2 class="text-center text-white mb-4 opacity-75 fw-bold">Budgets</h2>
-      <main class="glass-card dark-placeholder shadow-lg overflow-hidden">
+      <main class="glass-card shadow-lg overflow-hidden mb-4">
         <div class="card-body p-4 p-md-5">
-
           <form [formGroup]="budgetForm" (ngSubmit)="addBudget()">
+            <div class="row g-4">
 
-            <div class="row g-3 ">
-
-              <div class="col-md-6 mb-2">
-                <label class="form-label">Value (R$)</label>
-
-                <div class=" input-group m-2">
-                  <div class="input-group">
-                  <span class="input-group-text bg-white border-0 rounded-start-4 fw-bold text-secondary">R$</span>
-                  <input type="number" class="form-control rounded-end-4" formControlName="value" placeholder="0.00">
+              <div class="col-md-12">
+                <label class="form-label">Limit Value</label>
+                <div class="input-group custom-glass-input">
+                  <span class="input-group-text glass-addon fw-bold">R$</span>
+                  <input type="number" class="form-control glass-input" formControlName="budgetLimit" placeholder="0.00">
                 </div>
               </div>
 
-              </div>
-
-
-              <div class="col-md-6 mb-2">
+              <div class="col-md-6">
                 <label class="form-label">Category</label>
-
-                <div class=" input-group custom-glass-select m-2">
-                  <i class="bi bi-bookmark-check-fill py-3 px-2"></i>
-                  <select class="form-select border-0 rounded-4" formControlName="category">
-                    <option value="" disabled selected>Select...</option>
+                <div class="input-group custom-glass-select">
+                  <span class="input-group-text glass-addon"><i class="bi bi-bookmark-check-fill"></i></span>
+                  <select class="form-select" formControlName="category">
+                    <option value="" disabled selected>Select category...</option>
                     @for (ctg of categories; track ctg){
-                      <option [value]="ctg" class="bg-dark text-white">{{ctg}}</option>
+                      <option [value]="ctg">{{ctg}}</option>
                     }
                   </select>
                 </div>
-
               </div>
 
-              <div class="col-md-6 mb-4">
+              <div class="col-md-6">
                 <label class="form-label">Month</label>
-
-                <div class=" input-group custom-glass-select m-2">
-                  <i class="bi bi-calendar-check-fill py-3 px-2"></i>
-
-                  <select class="form-select border-0" formControlName="month">
-
-                    <option value="" disabled selected>Select...</option>
+                <div class="input-group custom-glass-select">
+                  <span class="input-group-text glass-addon"><i class="bi bi-calendar-check-fill"></i></span>
+                  <select class="form-select" formControlName="month">
+                    <option value="" disabled selected>Select month...</option>
                     @for (month of months; track month){
-                      <option [value]="month" class="bg-dark text-white">{{month}}</option>
+                      <option [value]="month">{{month}}</option>
                     }
                   </select>
                 </div>
               </div>
-
 
             </div>
 
-            @if (budgetForm.get('value')?.invalid && budgetForm.get('value')?.touched) {
-              <div class="alert-box mb-4">
+            @if (budgetForm.get('budgetLimit')?.invalid && budgetForm.get('budgetLimit')?.touched) {
+              <div class="alert-box mt-4 mb-0">
                 <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                Use dots (<b>.</b>) for decimals.
+                Please enter a valid numeric amount. Use dots (<b>.</b>) for decimals.
               </div>
             }
 
-            <button [disabled]="budgetForm.invalid" type="submit"
-                    class="w-100 btn btn-lg btn-add text-white fw-bold shadow py-3 transition-all">
-              <i class="bi bi-check-circle me-2"></i> Confirm Transaction
+            <button [disabled]="budgetForm.invalid" type="submit" class="w-100 btn btn-add-teal mt-4 shadow-sm py-3 text-uppercase letter-spacing-1">
+              <i class="bi bi-check-circle me-2"></i> Set Budget Limit
             </button>
           </form>
         </div>
       </main>
     </div>
 
-    <div class="col-11 col-md-3 col-lg-3 mx-4 my-3 transaction-div px-3 py-3">
+    <div class="col my-3 p-4 transaction-div ms-md-auto">
+      <div class="d-flex align-items-center justify-content-between mb-4 gap-2">
+        <h4 class="fw-bold text-light opacity-75 mb-0">Active Limits</h4>
 
-      <div class="row">
-
-        <h2 class="col-6 fw-bold text-light opacity-75 my-4 text-center">Budgets</h2>
-
-        <div class="col input-group custom-glass-select my-3 mx-1">
-            <i class="bi bi-calendar py-3 px-2"></i>
-
-            <select
-              class="form-select border-0"
-              [(ngModel)]="monthData"
-              (change)="updateBudgetsPanel()"
-              >
-              <option value="" disabled selected>Month...</option>
-              @for (month of months; track month){
-                <option [value]="month" class="bg-dark text-white">{{month}}</option>
-              }
-            </select>
-          </div>
-
+        <div class="input-group custom-glass-select w-auto mb-0">
+          <span class="input-group-text glass-addon py-1 px-2 fs-6"><i class="bi bi-calendar"></i></span>
+          <select class="form-select py-1 pe-4 ps-2 fs-6" [(ngModel)]="monthData" (change)="updateBudgetsPanel()">
+            <option value="" disabled selected>Period...</option>
+            @for (month of months; track month){
+              <option [value]="month">{{month}}</option>
+            }
+          </select>
+        </div>
       </div>
 
-      <div class="transaction-unit mt-3 p-4 dark-bg text-light">
-
-        <div class="row text-center fw-bold text-uppercase opacity-50 small mb-3 letter-spacing-1">
-          <div class="col-6 text-start ps-4">Category</div>
-          <div class="col-6 text-end pe-4">Budget Limit</div>
+      <div class="budget-list-scroll-wrap pe-1">
+        <div class="row text-uppercase opacity-50 small fw-bold mb-2 tracking-header mx-0">
+          <div class="col-6 text-start ps-2">Category</div>
+          <div class="col-6 text-end pe-2">Limit</div>
         </div>
 
-        <div class="d-flex flex-column gap-2">
+        <div class="d-flex flex-column gap-2 mb-3">
           @for (bdg of budgetList; track bdg.category) {
-            @if ($index > pageCounter * maxItemsPerPage - 1 && $index < pageCounter * maxItemsPerPage + maxItemsPerPage){
-              <div class="row align-items-center py-3 px-2 budget-row rounded-4 text-center">
-
-                <div class="col-6 text-start ps-3 fw-bold h6 mb-0">
-                  <i class="bi bi-tag-fill me-2 text-info"></i>
-                  {{ bdg.category }}
+            @if ($index >= pageCounter * maxItemsPerPage && $index < (pageCounter + 1) * maxItemsPerPage){
+              <div class="row align-items-center py-3 px-1 budget-row rounded-4 mx-0">
+                <div class="col-6 text-start ps-3 fw-semibold text-white-50 text-truncate">
+                  <i class="bi bi-tag-fill me-2 text-info small"></i>{{ bdg.category }}
                 </div>
-
-                <div class="col-6 text-end pe-3 fw-bold h6 mb-0 text-break">
-                  {{ (bdg.budgetLimit || 0) | currency:'BRL' }}
+                <div class="col-6 text-end pe-3 fw-bold text-info text-break">
+                  {{ ((bdg.budgetLimit / 100) || 0) | currency:'BRL' }}
                 </div>
-
               </div>
             }
           } @empty {
-            <div class="text-center py-4 opacity-50 font-italic small">
-              <i class="bi bi-folder-x d-block fs-3 mb-2"></i>
-              No budgets defined for this period.
+            <div class="text-center py-5 opacity-40 font-italic small border border-white-50 rounded-4 text-white-50">
+              <i class="bi bi-folder-x d-block fs-2 mb-2 text-white-50"></i>
+              No budgets found.
             </div>
           }
-
-          <div class="d-flex justify-content-between align-items-center gap-1 mt-4 pt-2 border-top border-white-50 pagination-container">
-
-            <button
-              type="button"
-              (click)="previousPageCounter()"
-              [disabled]="pageCounter === 0"
-              class="btn btn-pagination d-flex align-items-center gap-1"
-              aria-label="Previous Page">
-              <i class="bi bi-chevron-left"></i>
-              <span class="d-none d-sm-inline">Prev</span>
-            </button>
-
-            <div class="page-indicator-pill px-3 py-1.5 rounded-pill shadow-sm text-center">
-              <span class="small opacity-50 me-1">Page</span>
-              <strong class="text-info">{{ pageCounter + 1 }}</strong>
-              <span class="small opacity-50 mx-1">of</span>
-              <strong class="opacity-75">{{ maxPages }}</strong>
-            </div>
-
-            <button
-              type="button"
-              (click)="nextPageCounter()"
-              [disabled]="(pageCounter + 1) >= maxPages"
-              class="btn btn-pagination d-flex align-items-center gap-1"
-              aria-label="Next Page">
-              <span class="d-none d-sm-inline">Next</span>
-              <i class="bi bi-chevron-right"></i>
-            </button>
-
-          </div>
-
         </div>
       </div>
 
+      <div class="d-flex justify-content-between align-items-center gap-1 mt-4 pt-3 border-top border-white-50 pagination-container">
+        <button type="button" (click)="previousPageCounter()" [disabled]="pageCounter === 0" class="btn btn-pagination d-flex align-items-center gap-1 border text-white-50">
+          <i class="bi bi-chevron-left"></i><span>Prev</span>
+        </button>
+
+        <div class="page-indicator-pill px-3 py-1.5 rounded-pill shadow-sm text-center  border text-white-50">
+          <span class="small opacity-50 me-1">Page</span>
+          <strong class="text-info">{{ pageCounter + 1 }}</strong>
+          <span class="small opacity-50 mx-1">of</span>
+          <strong class="opacity-75">{{ maxPages || 1 }}</strong>
+        </div>
+
+        <button type="button" (click)="nextPageCounter()" [disabled]="(pageCounter + 1) >= maxPages" class="btn btn-pagination d-flex align-items-center gap-1 border text-white-50">
+          <span >Next</span><i class="bi bi-chevron-right"></i>
+        </button>
+      </div>
+
     </div>
+
   </div>
 </div>

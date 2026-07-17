@@ -9,6 +9,6 @@ import java.util.Optional;
 public interface AccountRepository extends JpaRepository<AccountEntity, Long> {
 
 
-    @Query("SELECT a FROM account a JOIN user u ON a.user.id = u.id AND u.email = :email")
-    Optional<AccountEntity> getAccount(String email);
+    @Query("SELECT a FROM account a WHERE a.user.id = :usr")
+    Optional<AccountEntity> getAccount(Long usr);
 }

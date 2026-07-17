@@ -39,23 +39,32 @@ export class BudgetPage {
 
   pageCounter: number = 0;
   maxPages: number = 1;
-  maxItemsPerPage: number = 3
+  maxItemsPerPage: number = 3;
 
   constructor(
     private budgets: BudgetsService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
   ) {}
 
   budgetForm = new FormGroup({
-    value: new FormControl(0, [Validators.required, Validators.nullValidator, Validators.min(1)]),
     category: new FormControl('', [Validators.required, Validators.nullValidator]),
-    month: new FormControl('', [Validators.required, Validators.nullValidator]),
+    month: new FormControl("", [Validators.required, Validators.nullValidator]),
+    budgetLimit: new FormControl(0, [
+      Validators.required,
+      Validators.nullValidator,
+      Validators.min(1),
+    ]),
   });
 
   budgetList?: BudgetDTO[];
 
   public addBudget() {
-    return;
+    const newBudget = this.budgetForm.value as BudgetDTO;
+    newBudget.month = this.months.indexOf(newBudget.month ) + 1;
+    newBudget.budgetLimit *= 100;
+    this.budgets.addBudgets(newBudget);
+    this.clearForm();
+
   }
 
   public updateMonth(month: number) {
@@ -65,7 +74,6 @@ export class BudgetPage {
         this.maxPages = Math.ceil(nxt.length / 3);
         console.log('Getting budgets successfully');
         this.cdr.detectChanges();
-
       },
       error: (err) => console.log('Error getting budgets' + err),
     });
@@ -83,5 +91,12 @@ export class BudgetPage {
     if (this.pageCounter > 0) this.pageCounter--;
   }
 
-  protected readonly Math = Math;
+  private clearForm(){
+    this.budgetForm.setValue({
+      category: "",
+      month: "",
+      budgetLimit: 0
+    }
+    )
+  }
 }

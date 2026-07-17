@@ -96,7 +96,7 @@ public class UserAuthService {
     }
 
     public Long getUserId(String email){
-        return userAuthRepository.getIdByEmail(email).orElseThrow(() -> new RuntimeException("User Not Found"));
+        return userAuthRepository.getIdByEmail(email).orElseThrow(() -> new RuntimeException("User Id Not Found"));
     }
 
 
