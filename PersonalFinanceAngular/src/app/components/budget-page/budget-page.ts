@@ -4,6 +4,9 @@ import { AsideComponent } from "../aside-component/aside-component";
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators, ɵInternalFormsSharedModule } from '@angular/forms';
 import { CurrencyPipe } from '@angular/common';
 import { BudgetsService } from '../../services/transactions/budgets-service';
+import { GeneralServices } from '../../services/general-service/general-services';
+import { MonthsModel, ExpenseCategoriesModel } from '../../models/objects/general-models';
+
 
 @Component({
   selector: 'app-budget-page',
@@ -18,22 +21,9 @@ import { BudgetsService } from '../../services/transactions/budgets-service';
   styleUrl: './budget-page.css',
 })
 export class BudgetPage {
-  categories = ['Food', 'Transport', 'Leisure', 'Health', 'Housing', 'Others'];
+  categories = ExpenseCategoriesModel;
 
-  months = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ];
+  months = MonthsModel;
 
   monthData = '';
 
@@ -44,11 +34,12 @@ export class BudgetPage {
   constructor(
     private budgets: BudgetsService,
     private cdr: ChangeDetectorRef,
+    private general: GeneralServices,
   ) {}
 
   budgetForm = new FormGroup({
     category: new FormControl('', [Validators.required, Validators.nullValidator]),
-    month: new FormControl("", [Validators.required, Validators.nullValidator]),
+    month: new FormControl('', [Validators.required, Validators.nullValidator]),
     budgetLimit: new FormControl(0, [
       Validators.required,
       Validators.nullValidator,
@@ -60,11 +51,10 @@ export class BudgetPage {
 
   public addBudget() {
     const newBudget = this.budgetForm.value as BudgetDTO;
-    newBudget.month = this.months.indexOf(newBudget.month ) + 1;
+    newBudget.month = this.months.indexOf(newBudget.month) + 1;
     newBudget.budgetLimit *= 100;
     this.budgets.addBudgets(newBudget);
     this.clearForm();
-
   }
 
   public updateMonth(month: number) {
@@ -75,7 +65,10 @@ export class BudgetPage {
         console.log('Getting budgets successfully');
         this.cdr.detectChanges();
       },
-      error: (err) => console.log('Error getting budgets' + err),
+      error: (err) => {
+        console.log('Error getting budgets' + err);
+        this.general.logoutUser();
+      },
     });
   }
 
@@ -91,12 +84,11 @@ export class BudgetPage {
     if (this.pageCounter > 0) this.pageCounter--;
   }
 
-  private clearForm(){
+  private clearForm() {
     this.budgetForm.setValue({
-      category: "",
-      month: "",
-      budgetLimit: 0
-    }
-    )
+      category: '',
+      month: '',
+      budgetLimit: 0,
+    });
   }
 }

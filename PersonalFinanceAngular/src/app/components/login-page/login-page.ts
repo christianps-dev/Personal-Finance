@@ -1,4 +1,4 @@
-import { AuthUser } from './../../services/auth-user/auth-user';
+import { AuthUser } from '../../services/auth-user/auth-user';
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { UserLoginDTO } from '../../models/auth-dto/user-login-dto'
@@ -27,6 +27,6 @@ export class LoginPage {
         password: ""
       })
 
-      return this.authUser.siginUser(userLogin);
+      return this.authUser.signUser(userLogin);
     }
 }

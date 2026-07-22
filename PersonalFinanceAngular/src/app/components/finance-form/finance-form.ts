@@ -2,13 +2,14 @@ import { Finances } from '../../services/transactions/finances';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { getLastTransactionDTO } from '../../models/transactions-dto/getTransactionDTO';
-import { UserGenericDTO } from '../../models/user-generic-dto';
-import { CurrencyPipe, DatePipe, NgClass } from '@angular/common';
+import { CurrencyPipe, DatePipe } from '@angular/common';
 import { AsideComponent } from "../aside-component/aside-component";
+import { GeneralServices } from '../../services/general-service/general-services';
+import { ExpenseCategoriesModel, IncomeCategoriesModel } from '../../models/objects/general-models';
 
 @Component({
   selector: 'app-finance-form',
-  imports: [ReactiveFormsModule, CurrencyPipe, AsideComponent, DatePipe, NgClass],
+  imports: [ReactiveFormsModule, CurrencyPipe, AsideComponent, DatePipe],
   templateUrl: './finance-form.html',
   styleUrls: ['./finance-form.css'],
 })
@@ -16,10 +17,13 @@ export class FinanceForm implements OnInit {
   constructor(
     private transaction: Finances,
     private cdr: ChangeDetectorRef,
+    private general: GeneralServices,
   ) {}
 
-  expensesCategories = ['Food', 'Transport', 'Leisure', 'Health', 'Housing', 'Others'];
-  incomeCategories = ['Job', 'Freelance', 'Gift', 'Others'];
+  expensesCategories = ExpenseCategoriesModel;
+  incomeCategories = IncomeCategoriesModel;
+  qtdTransactionsMenu = 3;
+  transactionsDisplayed?: getLastTransactionDTO[];
 
   financeForm = new FormGroup({
     description: new FormControl(''),
@@ -29,13 +33,9 @@ export class FinanceForm implements OnInit {
     date: new FormControl(''),
   });
 
-  qtdTransactionsMenu = 3;
-
   ngOnInit() {
     this.getLastTransactions(this.qtdTransactionsMenu);
   }
-
-  transactionsDisplayed?: getLastTransactionDTO[];
 
   public addTransaction() {
     const financeAdd = this.financeForm.value as TransactionDTO;
@@ -63,16 +63,15 @@ export class FinanceForm implements OnInit {
   }
 
   public getLastTransactions(qtd: number) {
-    const user: UserGenericDTO = {
-      email: sessionStorage.getItem('email') ?? '',
-      username: sessionStorage.getItem('username') ?? '',
-    };
-    this.transaction.getLastTransactionsByQtd(qtd, user).subscribe({
+    this.transaction.getLastTransactionsByQtd(qtd).subscribe({
       next: (nxt) => {
         this.transactionsDisplayed = nxt;
         this.cdr.detectChanges();
       },
-      error: (err) => console.log('Error while getting transactions', err),
+      error: (err) => {
+        console.log('Error while getting transactions', err);
+        this.general.logoutUser();
+      },
     });
   }
 }

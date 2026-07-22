@@ -31,7 +31,7 @@ export class SignupPage {
     return this.authUser.registerNewUser(userDTO);
   }
 
-  sendLoginpage(){
+  sendLoginPage(){
     this.router.navigate(['/login'])
   }
 

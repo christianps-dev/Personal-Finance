@@ -5,22 +5,22 @@ import { DashboardFinancesDTO } from '../../models/transactions-dto/dashboard-dt
 import { AsideComponent } from "../aside-component/aside-component";
 import { getLastTransactionDTO } from '../../models/transactions-dto/getTransactionDTO';
 import { Chart, registerables} from 'chart.js';
-import { UserGenericDTO } from '../../models/user-generic-dto';
 import { FormsModule, ɵInternalFormsSharedModule } from '@angular/forms';
 import { TabelaServices } from '../../services/general-service/chart-services';
 import { BudgetsDashboardDto } from '../../models/transactions-dto/budgets-dashboard-dto';
 import { BudgetsService } from '../../services/transactions/budgets-service';
+import { GeneralServices } from '../../services/general-service/general-services';
+import {
+  UserInfoModel,
+  MonthsModel,
+  ExpenseCategoriesModel,
+} from '../../models/objects/general-models';
+
 Chart.register(...registerables)
 
 @Component({
   selector: 'app-dashboard-page',
-  imports: [
-    CurrencyPipe,
-    AsideComponent,
-    ɵInternalFormsSharedModule,
-    FormsModule,
-    NgClass,
-  ],
+  imports: [CurrencyPipe, AsideComponent, ɵInternalFormsSharedModule, FormsModule, NgClass],
   templateUrl: './dashboard-page.html',
   styleUrl: './dashboard-page.css',
 })
@@ -29,41 +29,15 @@ export class DashboardPage implements OnInit {
 
   totalMonthly: DashboardFinancesDTO = { incomes: 0, expenses: 0, balance: 0 };
 
-  months = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ];
+  months = MonthsModel;
 
   budgetsDashboard?: BudgetsDashboardDto[];
 
   typeChart = 'bar';
 
-  userCredentials: UserGenericDTO = {
-    email: sessionStorage.getItem('email') ?? '',
-    username: sessionStorage.getItem('username') ?? '',
-  };
+  userCredentials = UserInfoModel;
 
-  chartCategories = [
-    'FOOD',
-    'TRANSPORT',
-    'LEISURE',
-    'HEALTH',
-    'HOUSING',
-    'OTHERS',
-    'JOB',
-    'FREELANCE',
-    'GIFT',
-  ];
+  chartCategories = ExpenseCategoriesModel;
 
   everyExpenses: { [key: string]: number } = {
     FOOD: 0,
@@ -88,6 +62,7 @@ export class DashboardPage implements OnInit {
     private cdr: ChangeDetectorRef,
     private graficos: TabelaServices,
     private budgets: BudgetsService,
+    private general: GeneralServices,
   ) {}
 
   public ngOnInit(): void {
@@ -95,7 +70,7 @@ export class DashboardPage implements OnInit {
   }
 
   public getAllByMonth(month: number): void {
-    this.finance.getAllTransactionsByMonth(this.userCredentials.email, month).subscribe({
+    this.finance.getAllTransactionsByMonth(month).subscribe({
       next: (transactions: getLastTransactionDTO[]) => {
         this.chartCategories.forEach((cat) => (this.everyExpenses[cat] = 0));
         this.resetFinancesData();
@@ -125,7 +100,9 @@ export class DashboardPage implements OnInit {
 
         this.cdr.detectChanges();
       },
-      error: (err) => console.error('Error getting the transactions', err),
+      error: (err) => {
+        console.error('Error getting the transactions', err);
+      },
     });
   }
 
@@ -154,12 +131,14 @@ export class DashboardPage implements OnInit {
           return hasExpense || hasIncome;
         });
 
+
         const expensesData = activeCategories.map((cat) => this.everyExpenses[cat] || 0);
         const incomesData = activeCategories.map((cat) => this.everyIncomes[cat] || 0);
 
         this.financeChart.data.labels = activeCategories;
         this.financeChart.data.datasets[0].data = expensesData;
         this.financeChart.data.datasets[1].data = incomesData;
+
 
         this.financeChart.options = {
           responsive: true,
@@ -193,10 +172,9 @@ export class DashboardPage implements OnInit {
           },
         };
 
-        this.financeChart.update();
       }
 
-      if (this.typeChart === 'doughnut') {
+      else {
         const activeExpenses = Object.keys(this.everyExpenses).filter(
           (cat) => this.everyExpenses[cat] > 0,
         );
@@ -217,6 +195,7 @@ export class DashboardPage implements OnInit {
         ];
 
         this.financeChart.data.labels = allLabels;
+
         this.financeChart.data.datasets[0].data = dataValues;
         this.financeChart.data.datasets[0].backgroundColor = colors;
 
@@ -234,49 +213,10 @@ export class DashboardPage implements OnInit {
           return `${type} - ${label}: ${formatted}`;
         };
 
-        this.financeChart.update();
       }
 
-      if (this.typeChart === 'pie') {
-        const activeExpenses = Object.keys(this.everyExpenses).filter(
-          (cat) => this.everyExpenses[cat] > 0,
-        );
-        const activeIncomes = Object.keys(this.everyIncomes).filter(
-          (cat) => this.everyIncomes[cat] > 0,
-        );
+      this.financeChart.update();
 
-        const allLabels = [...activeExpenses, ...activeIncomes];
-
-        const dataValues = [
-          ...activeExpenses.map((cat) => this.everyExpenses[cat]),
-          ...activeIncomes.map((cat) => this.everyIncomes[cat]),
-        ];
-
-        const colors = [
-          ...activeExpenses.map(() => '#d32823'),
-          ...activeIncomes.map(() => '#6ab70b'),
-        ];
-
-        this.financeChart.data.labels = allLabels;
-        this.financeChart.data.datasets[0].data = dataValues;
-        this.financeChart.data.datasets[0].backgroundColor = colors;
-
-        this.financeChart.options.plugins!.tooltip!.callbacks!.label = (context: any) => {
-          const label = context.label;
-          const value = context.parsed;
-          const isIncome = activeIncomes.includes(label);
-          const type = isIncome ? 'Income' : 'Expenses';
-
-          const formatted = new Intl.NumberFormat('pt-BR', {
-            style: 'currency',
-            currency: 'BRL',
-          }).format(value);
-
-          return `${type} - ${label}: ${formatted}`;
-        };
-
-        this.financeChart.update();
-      }
     }
   }
 
@@ -305,7 +245,10 @@ export class DashboardPage implements OnInit {
 
     this.budgets.getBudgetsDashboard(this.months.indexOf(this.monthData) + 1).subscribe({
       next: (nxt) => (this.budgetsDashboard = nxt),
-      error: (err) => console.log('Error getting budgets' + err),
+      error: (err) => {
+        console.log('Error getting budgets' + err);
+        this.general.logoutUser();
+      },
     });
     return;
   }

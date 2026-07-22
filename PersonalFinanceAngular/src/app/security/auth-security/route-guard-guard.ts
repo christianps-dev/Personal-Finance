@@ -1,4 +1,3 @@
-import { inject, Injectable } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 
 export const routeGuard: CanActivateFn = (route, state) => {
@@ -8,7 +7,7 @@ export const routeGuard: CanActivateFn = (route, state) => {
   const router = new Router;
 
   if(localEmail == null || localToken == null){
-   router.navigate(["/login"])
+   router.navigate(["/login"]).then();
     return false;
   }
   return true;

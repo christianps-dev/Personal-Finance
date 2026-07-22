@@ -2,66 +2,64 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Enviroment } from '../../../enviroment';
 import { Injectable } from '@angular/core';
 import { getLastTransactionDTO } from '../../models/transactions-dto/getTransactionDTO';
-import { UserGenericDTO } from '../../models/user-generic-dto';
-import { AccountBalanceDTO } from '../../models/transactions-dto/account-balance-dto'
 import { FullTransactionDTO } from '../../models/transactions-dto/full-transaction-dto';
+import { GeneralServices } from '../general-service/general-services';
+import { UserInfoModel } from '../../models/objects/general-models';
 
 @Injectable({
   providedIn: 'root',
 })
 export class Finances {
+  transactionURL = Enviroment.apiURL + '/finance';
 
-  transactionURL = Enviroment.apiURL + "/finance";
+  constructor(
+    private http: HttpClient,
+    private general: GeneralServices,
+  ) {}
 
-  constructor(private http : HttpClient){}
-
-  addNewTransaction(transaction: TransactionDTO){
-    const email = sessionStorage.getItem('email') || "";
-    const params = new HttpParams().set('email', email);
+  addNewTransaction(transaction: TransactionDTO) {
+    const params = new HttpParams().set('email', UserInfoModel.email);
 
     this.http
-      .post<TransactionDTO>(this.transactionURL + "/transaction", transaction, { params })
+      .post<TransactionDTO>(this.transactionURL + '/transaction', transaction, { params })
       .subscribe({
         complete: () => console.log('Transaction successfully'),
-        error: (err) => console.log('Transaction failed', err),
+        error: (err) => {
+          console.log('Transaction failed', err);
+          this.general.logoutUser();
+        },
       });
 
     return null;
   }
 
-  getLastTransactionsByQtd(qtd: number, user: UserGenericDTO){
+  getLastTransactionsByQtd(qtd: number) {
     const req = {
-      params: new HttpParams().set('email', user.email)
+      params: new HttpParams().set('email', UserInfoModel.email),
     };
-    return this.http.get<getLastTransactionDTO[]>(this.transactionURL + "/transactions/last/" + qtd, req);
+    return this.http.get<getLastTransactionDTO[]>(
+      this.transactionURL + '/transactions/last/' + qtd,
+      req,
+    );
   }
 
-  getAllTransactions(user: UserGenericDTO){
+  getAllTransactionsByMonth(month: number) {
     const req = {
-      params: new HttpParams().set('email', user.email)
+      params: new HttpParams().set('email', UserInfoModel.email),
     };
-    return this.http.get<getLastTransactionDTO[]>(this.transactionURL + "/transactions", req)
+    return this.http.get<getLastTransactionDTO[]>(
+      this.transactionURL + '/transactions/' + month,
+      req,
+    );
   }
 
-  getAllTransactionsByMonth(email: string, month: number){
+  public getFullTransactionsByMonth( month: number) {
     const req = {
-      params: new HttpParams().set('email', email)
+      params: new HttpParams().set('email', UserInfoModel.email),
     };
-    return this.http.get<getLastTransactionDTO[]>(this.transactionURL + "/transactions/" + month, req)
+    return this.http.get<FullTransactionDTO[]>(
+      this.transactionURL + '/transactions/full/' + month,
+      req,
+    );
   }
-
-  public getAccountBalance(email: string){
-    const req = {
-      params: new HttpParams().set('email', email)
-    };
-    return this.http.get<AccountBalanceDTO>(this.transactionURL + "/account", req);
-  }
-
-  public getFullTransactionsByMonth(email: string, month: number){
-    const req = {
-      params: new HttpParams().set('email', email)
-    };
-    return this.http.get<FullTransactionDTO[]>(this.transactionURL + "/transactions/full/" + month, req);
-  }
-
 }

@@ -29,7 +29,7 @@ export class AuthUser {
     return ;
   }
 
-  public siginUser(user: UserLoginDTO){
+  public signUser(user: UserLoginDTO){
 
       this.http.post<UserRequestDTO>(this.authUserUrl + "/login", user).subscribe({
         next: (next) => {

@@ -13,6 +13,7 @@ public class TokenService {
 
     @Value("${token.secret.key}")
     private String secret;
+    private final Integer tokenHours = 28800;
     
     public String generateToken(String email) {
 
@@ -31,7 +32,7 @@ public class TokenService {
     }
 
     public Instant getExpirationDate() {
-        return Instant.now().plusSeconds(3600);
+        return Instant.now().plusSeconds(tokenHours);
     }
 
     public String validateToken(String token) {
