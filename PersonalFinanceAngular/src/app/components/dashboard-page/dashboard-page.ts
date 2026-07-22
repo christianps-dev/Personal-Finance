@@ -13,7 +13,7 @@ import { GeneralServices } from '../../services/general-service/general-services
 import {
   UserInfoModel,
   MonthsModel,
-  ExpenseCategoriesModel,
+  ChartCategories
 } from '../../models/objects/general-models';
 
 Chart.register(...registerables)
@@ -37,7 +37,7 @@ export class DashboardPage implements OnInit {
 
   userCredentials = UserInfoModel;
 
-  chartCategories = ExpenseCategoriesModel;
+  chartCategories = ChartCategories;
 
   everyExpenses: { [key: string]: number } = {
     FOOD: 0,
@@ -69,30 +69,27 @@ export class DashboardPage implements OnInit {
     this.financeChart = this.graficos.createChart(this.typeChart, this.chartCategories);
   }
 
-  public getAllByMonth(month: number): void {
-    this.finance.getAllTransactionsByMonth(month).subscribe({
+  public getAllByMonth(): void {
+    this.finance.getAllTransactionsByMonth(this.months.indexOf(this.monthData) + 1).subscribe({
       next: (transactions: getLastTransactionDTO[]) => {
-        this.chartCategories.forEach((cat) => (this.everyExpenses[cat] = 0));
+        this.chartCategories.forEach((cat) => this.everyExpenses[cat] = 0);
         this.resetFinancesData();
 
         for (let t of transactions) {
           if (t.value < 0) {
-            this.totalMonthly.expenses += t.value;
+            this.totalMonthly.expenses += t.value / 100;
 
             if (this.everyExpenses[t.category] !== undefined) {
               this.everyExpenses[t.category] += Math.abs(t.value) / 100;
             }
           } else {
-            this.totalMonthly.incomes += t.value;
+            this.totalMonthly.incomes += t.value / 100;
 
             if (this.everyIncomes[t.category] !== undefined) {
               this.everyIncomes[t.category] += Math.abs(t.value) / 100;
             }
           }
         }
-
-        this.totalMonthly.incomes /= 100;
-        this.totalMonthly.expenses /= 100;
 
         this.getBudgetsLimits();
 
@@ -115,11 +112,7 @@ export class DashboardPage implements OnInit {
     this.typeChart = type;
     this.graficos.destroyChart(this.financeChart);
     this.financeChart = this.graficos.createChart(this.typeChart, this.chartCategories);
-    this.updateMonth();
-  }
-
-  public updateMonth() {
-    this.getAllByMonth(this.months.indexOf(this.monthData) + 1);
+    this.getAllByMonth();
   }
 
   public updateChart(): void {
@@ -131,14 +124,12 @@ export class DashboardPage implements OnInit {
           return hasExpense || hasIncome;
         });
 
-
         const expensesData = activeCategories.map((cat) => this.everyExpenses[cat] || 0);
         const incomesData = activeCategories.map((cat) => this.everyIncomes[cat] || 0);
 
         this.financeChart.data.labels = activeCategories;
         this.financeChart.data.datasets[0].data = expensesData;
         this.financeChart.data.datasets[1].data = incomesData;
-
 
         this.financeChart.options = {
           responsive: true,
@@ -172,9 +163,8 @@ export class DashboardPage implements OnInit {
           },
         };
 
-      }
-
-      else {
+        this.financeChart.update();
+      } else {
         const activeExpenses = Object.keys(this.everyExpenses).filter(
           (cat) => this.everyExpenses[cat] > 0,
         );
@@ -213,10 +203,8 @@ export class DashboardPage implements OnInit {
           return `${type} - ${label}: ${formatted}`;
         };
 
+        this.financeChart.update();
       }
-
-      this.financeChart.update();
-
     }
   }
 
@@ -244,7 +232,10 @@ export class DashboardPage implements OnInit {
     this.clearBudgets();
 
     this.budgets.getBudgetsDashboard(this.months.indexOf(this.monthData) + 1).subscribe({
-      next: (nxt) => (this.budgetsDashboard = nxt),
+      next: (nxt) => {
+        this.budgetsDashboard = nxt;
+        this.cdr.detectChanges();
+        },
       error: (err) => {
         console.log('Error getting budgets' + err);
         this.general.logoutUser();
@@ -252,4 +243,5 @@ export class DashboardPage implements OnInit {
     });
     return;
   }
+
 }

@@ -11,6 +11,9 @@ import { UserInfoModel } from '../../models/objects/general-models';
 })
 export class Finances {
   transactionURL = Enviroment.apiURL + '/finance';
+  req = {
+    params: new HttpParams().set('email', UserInfoModel.email),
+  };
 
   constructor(
     private http: HttpClient,
@@ -29,37 +32,26 @@ export class Finances {
           this.general.logoutUser();
         },
       });
-
-    return null;
   }
 
   getLastTransactionsByQtd(qtd: number) {
-    const req = {
-      params: new HttpParams().set('email', UserInfoModel.email),
-    };
     return this.http.get<getLastTransactionDTO[]>(
       this.transactionURL + '/transactions/last/' + qtd,
-      req,
+      this.req,
     );
   }
 
   getAllTransactionsByMonth(month: number) {
-    const req = {
-      params: new HttpParams().set('email', UserInfoModel.email),
-    };
     return this.http.get<getLastTransactionDTO[]>(
       this.transactionURL + '/transactions/' + month,
-      req,
+      this.req,
     );
   }
 
-  public getFullTransactionsByMonth( month: number) {
-    const req = {
-      params: new HttpParams().set('email', UserInfoModel.email),
-    };
+  public getFullTransactionsByMonth(month: number) {
     return this.http.get<FullTransactionDTO[]>(
       this.transactionURL + '/transactions/full/' + month,
-      req,
+      this.req,
     );
   }
 }

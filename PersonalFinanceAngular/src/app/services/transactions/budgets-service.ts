@@ -31,7 +31,5 @@ export class BudgetsService {
       complete: () => console.log('Budget added'),
       error: (err) => console.log('Error' + err),
     });
-
-    return null;
   }
 }

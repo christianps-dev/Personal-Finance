@@ -19,7 +19,7 @@
             <select
               class="form-select border-0"
               [(ngModel)]="monthData"
-              (change)="updateMonth()"
+              (change)="getAllByMonth()"
               >
               <option value="" disabled selected>Month...</option>
               @for (month of months; track month){
