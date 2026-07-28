@@ -35,7 +35,7 @@ export class DashboardPage implements OnInit {
 
   typeChart = 'bar';
 
-  userCredentials = UserInfoModel;
+  userCredentials : UserInfoModel;
 
   chartCategories = ChartCategories;
 
@@ -63,7 +63,7 @@ export class DashboardPage implements OnInit {
     private graficos: TabelaServices,
     private budgets: BudgetsService,
     private general: GeneralServices,
-  ) {}
+  ) {this.userCredentials = this.general.getUserInfo();}
 
   public ngOnInit(): void {
     this.financeChart = this.graficos.createChart(this.typeChart, this.chartCategories);

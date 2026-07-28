@@ -70,7 +70,7 @@ export class FinanceForm implements OnInit {
       },
       error: (err) => {
         console.log('Error while getting transactions', err);
-        this.general.logoutUser();
+        //this.general.logoutUser();
       },
     });
   }

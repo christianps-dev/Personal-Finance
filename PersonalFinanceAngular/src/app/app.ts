@@ -10,7 +10,7 @@ import { ReactiveFormsModule } from '@angular/forms';
   styleUrl: './app.css',
 })
 export class App {
-  protected readonly title = signal('PersonalFinanceAngular');
+  protected readonly title = signal('Finances-Control');
   constructor(NgbConfig: NgbConfig) {
     NgbConfig.animation = false;
   }

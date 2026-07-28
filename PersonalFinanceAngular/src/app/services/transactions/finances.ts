@@ -10,18 +10,24 @@ import { UserInfoModel } from '../../models/objects/general-models';
   providedIn: 'root',
 })
 export class Finances {
-  transactionURL = Enviroment.apiURL + '/finance';
-  req = {
-    params: new HttpParams().set('email', UserInfoModel.email),
-  };
 
   constructor(
     private http: HttpClient,
     private general: GeneralServices,
-  ) {}
+  ) {
+    this.userInfo = this.general.getUserInfo();
+
+    this.req = {
+      params: new HttpParams().set('email', this.userInfo.email),
+    };
+  }
+
+  transactionURL = Enviroment.apiURL + '/finance';
+  userInfo: UserInfoModel;
+  req: { params: HttpParams };
 
   addNewTransaction(transaction: TransactionDTO) {
-    const params = new HttpParams().set('email', UserInfoModel.email);
+    const params = new HttpParams().set('email', this.userInfo.email);
 
     this.http
       .post<TransactionDTO>(this.transactionURL + '/transaction', transaction, { params })

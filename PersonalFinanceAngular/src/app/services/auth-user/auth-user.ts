@@ -20,7 +20,7 @@ export class AuthUser {
 
     this.http.post<UserRequestDTO>(this.authUserUrl + "/register", user).subscribe({
       next: () => {
-        alert("Success user registration "),
+        alert("Success user registration ")
         this.router.navigate(["/login"])
       },
       error: (err) => alert("Registration error "+ err)
@@ -38,14 +38,14 @@ export class AuthUser {
           sessionStorage.setItem("username", next.username)
           this.router.navigate(["/dashboard"])
         },
-        error: (err) => {alert("Login unsuccesfull "+ err)}
+        error: (err) => {alert("Login unsuccessful "+ err)}
       });
     }
 
     public changePassword(newPassword: ChangePasswordDTO){
       this.http.post<ChangePasswordDTO>(this.authUserUrl + "/changepassword", newPassword).subscribe({
         complete: () => alert("Password change successfully"),
-        error: (err) => alert("Password change unsuccesfull "+ err)
+        error: (err) => alert("Password change unsuccessful "+ err)
       })
 
     }

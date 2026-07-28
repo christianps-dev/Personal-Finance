@@ -1,7 +1,8 @@
-export const UserInfoModel: any = {
-  username: sessionStorage.getItem('username') || '',
-  email: sessionStorage.getItem('email') || '',
-};
+export interface UserInfoModel{
+  username: string,
+  email: string,
+  token: string
+}
 export const ExpenseCategoriesModel: string[] = [
   'FOOD',
   'TRANSPORT',
