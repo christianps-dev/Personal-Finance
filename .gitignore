@@ -1,6 +1,7 @@
 
 ## Eviroment ###
+*.env
 .env
 application.properties
-.properties
+*.properties
 
