@@ -85,6 +85,7 @@ export class BudgetPage {
   }
 
   private clearForm() {
+    this.budgetForm.reset();
     this.budgetForm.setValue({
       category: '',
       month: '',

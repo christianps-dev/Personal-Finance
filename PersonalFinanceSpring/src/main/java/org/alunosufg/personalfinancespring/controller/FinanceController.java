@@ -31,11 +31,11 @@ public class FinanceController {
     }
 
     @PostMapping("/transaction")
-    public ResponseEntity<String> saveNewTransaction(@Valid @RequestBody UserTransactionDTO newTransaction,
+    public ResponseEntity<Boolean> saveNewTransaction(@Valid @RequestBody UserTransactionDTO newTransaction,
                                                       @RequestParam String email) {
-        String result = transactionService.saveTransaction(newTransaction, email);
+        Boolean result = transactionService.saveTransaction(newTransaction, email);
         System.out.println("--- Saving new transaction");
-        return ResponseEntity.status(HttpStatus.CREATED).body(result);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     @GetMapping("/transactions")

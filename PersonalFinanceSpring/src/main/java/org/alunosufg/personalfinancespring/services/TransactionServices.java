@@ -32,7 +32,7 @@ public class TransactionServices {
     }
 
     @Transactional
-    public String saveTransaction(@Valid @NotNull UserTransactionDTO dto, String email) {
+    public Boolean saveTransaction(@Valid @NotNull UserTransactionDTO dto, String email) {
         var account = accountsServices.getAccount(email);
 
         System.out.println("--- Saving new transactions");
@@ -52,12 +52,13 @@ public class TransactionServices {
             entity.setTransactionTime(java.sql.Date.from(Instant.now()));
 
         transactionRepository.save(entity);
-        return "Transaction saved successfully";
+        return true;
+
     }
 
-    public List<TransactionDTO> getAllTransactions(@Valid @NotNull String user) {
+    public List<TransactionDTO> getAllTransactions(@Valid @NotNull String email) {
         System.out.println("--- Getting all transactions");
-        Long userId = userAuthRepository.findIdByEmail(user);
+        Long userId = userAuthRepository.findIdByEmail(email);
         if (userId == null) {
             throw new RuntimeException("User not found");
         }

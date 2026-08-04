@@ -4,7 +4,7 @@ import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angula
 import { getLastTransactionDTO } from '../../models/transactions-dto/getTransactionDTO';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { AsideComponent } from "../aside-component/aside-component";
-import { GeneralServices } from '../../services/general-service/general-services';
+//import { GeneralServices } from '../../services/general-service/general-services';
 import { ExpenseCategoriesModel, IncomeCategoriesModel } from '../../models/objects/general-models';
 
 @Component({
@@ -17,7 +17,7 @@ export class FinanceForm implements OnInit {
   constructor(
     private transaction: Finances,
     private cdr: ChangeDetectorRef,
-    private general: GeneralServices,
+   // private general: GeneralServices,
   ) {}
 
   expensesCategories = ExpenseCategoriesModel;
@@ -43,6 +43,15 @@ export class FinanceForm implements OnInit {
 
     if (this.financeForm.value.type === 'expense') financeAdd.value *= -1;
 
+    this.clearForm();
+
+    this.transaction.addNewTransaction(financeAdd);
+
+    this.getLastTransactions(this.qtdTransactionsMenu);
+  }
+
+  private clearForm(){
+
     this.financeForm.reset();
 
     this.financeForm.setValue({
@@ -52,10 +61,6 @@ export class FinanceForm implements OnInit {
       type: 'expense',
       date: '',
     });
-
-    this.transaction.addNewTransaction(financeAdd);
-
-    this.getLastTransactions(this.qtdTransactionsMenu);
   }
 
   public setTransactionType(type: 'income' | 'expense') {
